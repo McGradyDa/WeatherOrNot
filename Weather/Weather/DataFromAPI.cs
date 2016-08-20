@@ -7,20 +7,22 @@ using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using System.IO;
-using System.Diagnostics;
 
 namespace Weather
 {
-    public class DataFromAPI
+    class DataFromAPI
     {
-        public async static Task<RootObject> Getweather(int cityID, string APPKEY, string Unit)
+        public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
         {
             var http = new HttpClient();
             string url = string.Format("http://api.openweathermap.org/data/2.5/forecast/daily?id={0}&APPID={1}&units={2}&cnt=7", cityID, APPKEY, Unit);
             var response = await http.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
-
+            //write to file
+            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            Windows.Storage.StorageFile _file = await storageFolder.CreateFileAsync(DataLib.jsonFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            await Windows.Storage.FileIO.WriteTextAsync(_file, result);
 
             var serializer = new DataContractJsonSerializer(typeof(RootObject));
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
