@@ -12,6 +12,7 @@ namespace Weather
 
         public static string[] windEN = { "N", "NE", "E", "SE", "S", "SW", "W", "NW" };
         public static string[] windZH = { "北风", "东北风", "东风", "东南风", "南风", "西南风", "西风", "西北风" };
+        public static string[] windIcon = { "\xf05c", "\xf05a", "\xf059", "\xf05d", "&#xf060", "\xf05e", "\xf061", "&#xf05b" };
 
 
         public static string jsonFile = "result.json";

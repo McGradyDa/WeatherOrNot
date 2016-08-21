@@ -89,7 +89,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="Assets\Fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="Assets\bg0.jpg" />
+    <Content Include="Assets\Fonts\weather.ttf" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,18 @@
   <ItemGroup>
     <Content Include="Assets\bg1.jpg" />
     <Content Include="Assets\bg2.jpg" />
+    <Content Include="Assets\Season\autumn.jpg" />
+    <Content Include="Assets\Season\spring.jpg" />
+    <Content Include="Assets\Season\summer.jpg" />
+    <Content Include="Assets\Season\winter.jpg" />
+    <Content Include="Assets\Tile\cloudy.jpg" />
+    <Content Include="Assets\Tile\day.jpg" />
+    <Content Include="Assets\Tile\morning.jpg" />
+    <Content Include="Assets\Tile\night.jpg" />
+    <Content Include="Assets\Tile\rain.jpg" />
+    <Content Include="Assets\Tile\snow.jpg" />
+    <Content Include="Assets\Tile\sunset.jpg" />
+    <Content Include="Assets\Tile\thunderstorm.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -130,6 +143,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
