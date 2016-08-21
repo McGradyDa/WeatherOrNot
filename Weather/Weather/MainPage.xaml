@@ -290,9 +290,6 @@
 
         </Grid>
         <Grid Grid.Row="1">
-            <Grid.Background>
-                <SolidColorBrush Color="White" Opacity="0.3"/>
-            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6.2*"/>
                 <ColumnDefinition Width="2*"/>
@@ -302,7 +299,7 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1.5*"/>
@@ -335,19 +332,28 @@
                     <TextBlock HorizontalAlignment="Right" Name="TodayDate" Foreground="White" FontSize="30"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Grid.ColumnSpan="2" >
+            <Grid Grid.Column="1" BorderBrush="Gray" BorderThickness="1.2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek1" FontWeight="Bold" Foreground="White"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek1" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon1" FontSize="30" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay1"  FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon1" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay1" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax1"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin1"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed1"/>
@@ -356,19 +362,28 @@
                     <TextBlock Visibility="Collapsed" Name="Pressure1"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="2" Grid.ColumnSpan="2">
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek2"  FontWeight="Bold" Foreground="White"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek2" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon2" FontSize="30" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay2" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon2" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay2" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax2"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin2"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed2"/>
@@ -377,19 +392,28 @@
                     <TextBlock Visibility="Collapsed" Name="Pressure2"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="3" Grid.ColumnSpan="2" >
+            <Grid Grid.Column="3" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek3" FontWeight="Bold" Foreground="White"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek3" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon3" FontSize="30" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay3" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon3" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay3" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax3"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin3"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed3"/>
@@ -398,19 +422,28 @@
                     <TextBlock Visibility="Collapsed" Name="Pressure3"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="4" Grid.ColumnSpan="2" >
+            <Grid Grid.Column="4" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek4" FontWeight="Bold" Foreground="White"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek4" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon4" FontSize="30" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay4" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon4" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay4" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax4"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin4"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed4"/>
@@ -419,19 +452,28 @@
                     <TextBlock Visibility="Collapsed" Name="Pressure4"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="5" Grid.ColumnSpan="2" >
+            <Grid Grid.Column="5" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek5" FontWeight="Bold" Foreground="White"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek5" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon5" FontSize="30" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay5" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon5" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay5" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax5"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin5"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed5"/>
@@ -440,19 +482,28 @@
                     <TextBlock Visibility="Collapsed" Name="Pressure5"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="6" Grid.ColumnSpan="2" >
+            <Grid Grid.Column="6" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.9*"/>
                     <RowDefinition Height="2.2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Name="dayofweek6" FontWeight="Bold" Foreground="WhiteSmoke" FontSize="30"/>
                 <Grid Grid.Row="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Grid.Background>
+                    <TextBlock Name="dayofweek6" HorizontalAlignment="Center" CharacterSpacing="60" FontSize="23" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.4"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="0.7*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock  Name ="WeatherIcon6" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
-                    <TextBlock Grid.Row="1" Name="TempDay6" FontWeight="Bold" Foreground="White" FontSize="22"/>
+                    <TextBlock Grid.Row="0" Name ="WeatherIcon6" HorizontalAlignment="Center" FontSize="35" FontFamily="ms-appx:///Assets/Fonts/weathericons-regular-webfont.ttf#Weather Icons" />
+                    <TextBlock Grid.Row="1" Name="TempDay6" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="White"/>
                     <TextBlock Visibility="Collapsed" Name="TempMax6"/>
                     <TextBlock Visibility="Collapsed" Name="TempMin6"/>
                     <TextBlock Visibility="Collapsed" Name="WindSpeed6"/>
