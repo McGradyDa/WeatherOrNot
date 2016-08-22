@@ -119,10 +119,14 @@
     <Content Include="Assets\Tile\day0.jpg" />
     <Content Include="Assets\Tile\morning0.jpg" />
     <Content Include="Assets\Tile\night0.jpg" />
-    <Content Include="Assets\Tile\rain0.jpg" />
-    <Content Include="Assets\Tile\snow0.jpg" />
+    <Content Include="Assets\Tile\Rain0.jpg" />
+    <Content Include="Assets\Tile\Snow0.jpg" />
     <Content Include="Assets\Tile\sunset0.jpg" />
-    <Content Include="Assets\Tile\thunderstorm0.jpg" />
+    <Content Include="Assets\Tile\Thunderstorm0.jpg" />
+    <Content Include="Assets\Weather\Clouds0.jpg" />
+    <Content Include="Assets\Weather\Rain0.jpg" />
+    <Content Include="Assets\Weather\Snow0.jpg" />
+    <Content Include="Assets\Weather\Thunderstorm0.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
