@@ -89,7 +89,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="Assets\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
     <None Include="project.json" />
   </ItemGroup>
@@ -110,20 +109,20 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\bg1.jpg" />
-    <Content Include="Assets\bg2.jpg" />
     <Content Include="Assets\Season\autumn.jpg" />
     <Content Include="Assets\Season\spring.jpg" />
     <Content Include="Assets\Season\summer.jpg" />
     <Content Include="Assets\Season\winter.jpg" />
-    <Content Include="Assets\Tile\cloudy.jpg" />
-    <Content Include="Assets\Tile\day.jpg" />
-    <Content Include="Assets\Tile\morning.jpg" />
-    <Content Include="Assets\Tile\night.jpg" />
-    <Content Include="Assets\Tile\rain.jpg" />
-    <Content Include="Assets\Tile\snow.jpg" />
-    <Content Include="Assets\Tile\sunset.jpg" />
-    <Content Include="Assets\Tile\thunderstorm.jpg" />
+    <Content Include="Assets\sun0.jpg" />
+    <Content Include="Assets\sun1.jpg" />
+    <Content Include="Assets\Tile\Clouds0.jpg" />
+    <Content Include="Assets\Tile\day0.jpg" />
+    <Content Include="Assets\Tile\morning0.jpg" />
+    <Content Include="Assets\Tile\night0.jpg" />
+    <Content Include="Assets\Tile\rain0.jpg" />
+    <Content Include="Assets\Tile\snow0.jpg" />
+    <Content Include="Assets\Tile\sunset0.jpg" />
+    <Content Include="Assets\Tile\thunderstorm0.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
