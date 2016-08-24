@@ -90,14 +90,25 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\Fonts\weather.ttf" />
+    <Content Include="Assets\RectangleBG\1.1.jpg" />
+    <Content Include="Assets\RectangleBG\1.jpg" />
+    <Content Include="Assets\sun3.jpg" />
+    <Content Include="Assets\sun4.jpg" />
+    <Content Include="Assets\Weather\Clouds0.jpg" />
+    <Content Include="Assets\Weather\Rain0.jpg" />
+    <Content Include="city.json" />
+    <Content Include="city2.json" />
+    <Content Include="city3.json" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataFromAPI.cs" />
-    <Compile Include="DataLib.cs" />
+    <Compile Include="CityData.cs" />
+    <Compile Include="GetDataFromAPI.cs" />
+    <Compile Include="BasicData.cs" />
+    <Compile Include="MercatorProjection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -115,6 +126,7 @@
     <Content Include="Assets\Season\winter.jpg" />
     <Content Include="Assets\sun0.jpg" />
     <Content Include="Assets\sun1.jpg" />
+    <Content Include="Assets\sun2.jpg" />
     <Content Include="Assets\Tile\Clouds0.jpg" />
     <Content Include="Assets\Tile\day0.jpg" />
     <Content Include="Assets\Tile\morning0.jpg" />
@@ -123,10 +135,9 @@
     <Content Include="Assets\Tile\Snow0.jpg" />
     <Content Include="Assets\Tile\sunset0.jpg" />
     <Content Include="Assets\Tile\Thunderstorm0.jpg" />
-    <Content Include="Assets\Weather\Clouds0.jpg" />
-    <Content Include="Assets\Weather\Rain0.jpg" />
     <Content Include="Assets\Weather\Snow0.jpg" />
     <Content Include="Assets\Weather\Thunderstorm0.jpg" />
+    <Content Include="Assets\worldmap.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -146,7 +157,11 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
