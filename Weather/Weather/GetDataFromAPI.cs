@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -10,7 +9,7 @@ using System.IO;
 
 namespace Weather
 {
-    class GetDataFromAPI
+    public class GetDataFromAPI
     {
         public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
         {
