@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Weather
 {
-    public class GetDataFromAPI
+    public class OpenWeatherMapAPI
     {
         public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
         {
