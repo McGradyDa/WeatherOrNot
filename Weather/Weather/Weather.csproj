@@ -89,15 +89,15 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\avatar.jpg" />
+    <Content Include="Assets\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
     <Content Include="Assets\RectangleBG\1.1.jpg" />
     <Content Include="Assets\RectangleBG\1.jpg" />
     <Content Include="Assets\sun3.jpg" />
-    <Content Include="Assets\sun4.jpg" />
+    <Content Include="Assets\sun1.jpg" />
     <Content Include="Assets\Weather\Clouds0.jpg" />
     <Content Include="Assets\Weather\Rain0.jpg" />
-    <Content Include="city.json" />
-    <Content Include="city2.json" />
     <Content Include="city3.json" />
     <None Include="project.json" />
   </ItemGroup>
@@ -108,7 +108,7 @@
     </Compile>
     <Compile Include="CityData.cs" />
     <Compile Include="CityDataSource.cs" />
-    <Compile Include="GetDataFromAPI.cs" />
+    <Compile Include="OpenWeatherMapAPI.cs" />
     <Compile Include="BasicData.cs" />
     <Compile Include="MercatorProjection.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -117,9 +117,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WeatherPage.xaml.cs">
-      <DependentUpon>WeatherPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +130,6 @@
     <Content Include="Assets\Season\summer.jpg" />
     <Content Include="Assets\Season\winter.jpg" />
     <Content Include="Assets\sun0.jpg" />
-    <Content Include="Assets\sun1.jpg" />
     <Content Include="Assets\sun2.jpg" />
     <Content Include="Assets\Tile\Clouds0.jpg" />
     <Content Include="Assets\Tile\day0.jpg" />
@@ -165,10 +161,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WeatherPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

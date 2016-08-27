@@ -13,21 +13,46 @@ namespace Weather
     {
         public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
         {
-            var http = new HttpClient();
-            string url = string.Format("http://api.openweathermap.org/data/2.5/forecast/daily?id={0}&APPID={1}&units={2}&cnt=7", cityID, APPKEY, Unit);
-            var response = await http.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            //write to file
+            return await Task.Run(() =>
+            { 
+                var response = getResponse(cityID, APPKEY, Unit).Result;//do not use await 
+                var result =responseToString(response).Result;
+                //parse json
+                var serializer = new DataContractJsonSerializer(typeof(RootObject));
+                var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+                var data = (RootObject)serializer.ReadObject(ms);
+                //write to file 
+                writeToFile(result);
+                return data;
+            }).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        async static void writeToFile(string result)
+        {
+            //initailization don't need the data,so needn't use .ConfigureAwait(continueOnCapturedContext: false)
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             Windows.Storage.StorageFile _file = await storageFolder.CreateFileAsync(BasicData.jsonFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
             await Windows.Storage.FileIO.WriteTextAsync(_file, result);
+        }
 
-            var serializer = new DataContractJsonSerializer(typeof(RootObject));
-            var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
-            var data = (RootObject)serializer.ReadObject(ms);
+        async static Task<HttpResponseMessage> getResponse(int cityID, string APPKEY, string Unit)
+        {
+            return await Task.Run(() =>
+            {
+                var http = new HttpClient();
+                string url = string.Format("http://api.openweathermap.org/data/2.5/forecast/daily?id={0}&APPID={1}&units={2}&cnt=7", cityID, APPKEY, Unit);
+                var response = http.GetAsync(url);
+                return response;
+            }).ConfigureAwait(continueOnCapturedContext: false);
+        }
 
-            return data;
+        async static Task<string> responseToString(HttpResponseMessage c)
+        {
+            return await Task.Run(() =>
+            {
+                var v = c.Content.ReadAsStringAsync();  // return c.Content.ReadAsStringAsync(); still not work
+                return v;
+            }).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         [DataContract]
@@ -38,7 +63,6 @@ namespace Weather
             [DataMember]
             public double lat { get; set; }
         }
-
 
         [DataContract]
         public class City
@@ -54,7 +78,6 @@ namespace Weather
             [DataMember]
             public int population { get; set; }
         }
-
 
         [DataContract]
         public class Temp
@@ -72,6 +95,7 @@ namespace Weather
             [DataMember]
             public double morn { get; set; }
         }
+
         [DataContract]
         public class Weather
         {
