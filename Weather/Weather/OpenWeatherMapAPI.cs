@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using System.IO;
+using Windows.Storage;
 
 namespace Weather
 {
@@ -14,25 +14,31 @@ namespace Weather
         public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
         {
             return await Task.Run(() =>
-            { 
-                var response = getResponse(cityID, APPKEY, Unit).Result;//do not use await 
-                var result =responseToString(response).Result;
+            {
+                var response = getResponse(cityID, APPKEY, Unit).Result;
+                var result = responseToString(response).Result;
                 //parse json
                 var serializer = new DataContractJsonSerializer(typeof(RootObject));
                 var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
                 var data = (RootObject)serializer.ReadObject(ms);
-                //write to file 
-                writeToFile(result);
+                //store 
+                storeToCache(result);
                 return data;
             }).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        async static void writeToFile(string result)
+        static void storeToCache(string result)
         {
-            //initailization don't need the data,so needn't use .ConfigureAwait(continueOnCapturedContext: false)
-            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile _file = await storageFolder.CreateFileAsync(BasicData.jsonFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
-            await Windows.Storage.FileIO.WriteTextAsync(_file, result);
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["WeatherData"] = result;
+            //Update weather time
+            localSettings.Values["UpdateDay"] = System.DateTime.UtcNow.Day;
+            localSettings.Values["UpdateTime"] = System.DateTime.Now.ToString();
+
+            ////initailization don't need the data,so needn't use .ConfigureAwait(continueOnCapturedContext: false)
+            //Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            //Windows.Storage.StorageFile _file = await storageFolder.CreateFileAsync(BasicData.jsonFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            //await Windows.Storage.FileIO.WriteTextAsync(_file, result);
         }
 
         async static Task<HttpResponseMessage> getResponse(int cityID, string APPKEY, string Unit)
