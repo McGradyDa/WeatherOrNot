@@ -26,7 +26,9 @@ namespace Weather
                 return data;
             }).ConfigureAwait(continueOnCapturedContext: false);
         }
-
+        /*
+         * store cache to settings
+         */
         static void storeToCache(string result)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -40,7 +42,9 @@ namespace Weather
             //Windows.Storage.StorageFile _file = await storageFolder.CreateFileAsync(BasicData.jsonFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
             //await Windows.Storage.FileIO.WriteTextAsync(_file, result);
         }
-
+        /*
+         * get http response from yql
+         */
         async static Task<HttpResponseMessage> getResponse(string cityID, string APPKEY, string Unit)
         {
             return await Task.Run(() =>
@@ -51,7 +55,9 @@ namespace Weather
                 return response;
             }).ConfigureAwait(continueOnCapturedContext: false);
         }
-
+        /*
+         * read string from response 
+         */
         async static Task<string> responseToString(HttpResponseMessage c)
         {
             return await Task.Run(() =>
