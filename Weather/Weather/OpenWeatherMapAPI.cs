@@ -11,7 +11,7 @@ namespace Weather
 {
     public class OpenWeatherMapAPI
     {
-        public async static Task<RootObject> GetWeatherData(int cityID, string APPKEY, string Unit)
+        public async static Task<RootObject> GetWeatherData(string cityID, string APPKEY, string Unit)
         {
             return await Task.Run(() =>
             {
@@ -41,7 +41,7 @@ namespace Weather
             //await Windows.Storage.FileIO.WriteTextAsync(_file, result);
         }
 
-        async static Task<HttpResponseMessage> getResponse(int cityID, string APPKEY, string Unit)
+        async static Task<HttpResponseMessage> getResponse(string cityID, string APPKEY, string Unit)
         {
             return await Task.Run(() =>
             {
