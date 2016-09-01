@@ -12,11 +12,11 @@ namespace Weather.OMP
 {
     public class OpenWeatherMapAPI
     {
-        public async static Task<RootObject> GetWeatherData(string cityID, string APPKEY, string Unit)
+        public async static Task<RootObject> GetWeatherData(string cityID, string Unit)
         {
             return await Task.Run(() =>
             {
-                var response = getResponse(cityID, APPKEY, Unit).Result;
+                var response = getResponse(cityID, Unit).Result;
                 var result = responseToString(response).Result;
                 //parse json
                 var serializer = new DataContractJsonSerializer(typeof(RootObject));
@@ -46,12 +46,12 @@ namespace Weather.OMP
         /*
          * get http response from yql
          */
-        async static Task<HttpResponseMessage> getResponse(string cityID, string APPKEY, string Unit)
+        async static Task<HttpResponseMessage> getResponse(string cityID, string Unit)
         {
             return await Task.Run(() =>
             {
                 var http = new HttpClient();
-                string url = string.Format("http://api.openweathermap.org/data/2.5/forecast/daily?id={0}&APPID={1}&units={2}&cnt=7", cityID, APPKEY, Unit);
+                string url = string.Format("http://api.openweathermap.org/data/2.5/forecast/daily?id={0}&APPID={1}&units={2}&cnt=7", cityID, apikey(), Unit);
                 var response = http.GetAsync(url);
                 return response;
             }).ConfigureAwait(continueOnCapturedContext: false);
@@ -66,6 +66,20 @@ namespace Weather.OMP
                 var v = c.Content.ReadAsStringAsync();  // return c.Content.ReadAsStringAsync(); still not work
                 return v;
             }).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        static string apikey()
+        {
+            List<string> key = new List<string>()
+            {
+                "b89e670bc56123aeec621fd72579ac27",
+                "fe5bcf68832d414f1e8aca0be36854be",
+                "0c0004241b97a3bc080176f0fc76df9b",
+                "c7c8d11ffa6e6ea6fcbb1233ecec91b3"
+            };
+            System.Random r = new System.Random();
+            string c = key[r.Next(0, key.Count)];
+            return c;
         }
     }
 
