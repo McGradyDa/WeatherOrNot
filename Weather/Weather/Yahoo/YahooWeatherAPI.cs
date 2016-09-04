@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -13,6 +10,15 @@ using Windows.Storage;
 
 namespace Weather.Yahoo
 {
+    public class Recording
+    {
+        public string day { get; set; }
+        public string temp { get; set; }
+        public string weather { get; set; }
+        public string describe { get; set; }
+        public string customColor { get; set; }
+    }
+
     public class YahooWeatherAPI
     {
         public async static Task<RootObject> GetWeatherData(string idOrCity, int unit, bool IsCityName)
