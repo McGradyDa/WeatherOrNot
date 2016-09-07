@@ -4,7 +4,6 @@ using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Globalization;
 using System.Text;
 using Windows.Storage;
 using System.Runtime.Serialization.Json;
@@ -15,6 +14,7 @@ using Windows.Foundation;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Globalization;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 namespace Weather
@@ -197,7 +197,8 @@ namespace Weather
             var con = content.query.results.channel;
 
             CityName.Text = con.location.city;
-            CountryName.Text = con.location.country;
+            string alpha2 = ISO3166.FromName(con.location.country).Alpha2;
+            CountryCode.Text = ","+alpha2;
             
             WindSpeed.Text = BasicData.LANG[6, LanguageValue] + con.wind.speed+ BasicData.WindUnit[UnitsValue];
             Humidity.Text = BasicData.LANG[7, LanguageValue] + con.atmosphere.humidity + "%";
@@ -249,67 +250,6 @@ namespace Weather
             Forecas = _tempF;
         }
 
-        /* OMP 
-
-        private OMP.RootObject ParseOMPData(string cache)
-        {
-            if (cache == "")
-            {
-                return OMP.OpenWeatherMapAPI.GetWeatherData(City1, UnitsList[UnitsValue]).Result;
-            }
-            else
-            {
-                //parse json data
-                var serializer = new DataContractJsonSerializer(typeof(OMP.RootObject));
-                var ms = new MemoryStream(Encoding.UTF8.GetBytes(cache));
-                return (OMP.RootObject)serializer.ReadObject(ms);
-            }
-        }
-
-        private void UpdateMainWindowWithOMP(OMP.RootObject content)
-        {
-            OMP_Data = content;
-            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
-            //Get city data and lat lon
-            //CityData.readCityData();
-
-            CityName.Text = content.city.name;
-            RegionInfo CountryEN = new RegionInfo(content.city.country);
-            CountryName.Text = CountryEN.EnglishName;
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
-            TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
-
-            WindSpeed.Text = BasicData.LANG[6, LanguageValue] + content.list[0].speed + BasicData.WindUnit[UnitsValue];
-            Humidity.Text = BasicData.LANG[7, LanguageValue] + content.list[0].humidity + "%";
-            Pressure.Text = content.list[0].pressure+"hPa";
-
-            var w = (int)((content.list[0].deg + 22.5) % 360 / 45);
-            //wind icon      
-            WindIcon.Text = BasicData.Wind[2, w];
-            //N or 北风
-            WindDegree.Text = BasicData.Wind[LanguageValue, w];
-            //calculate one time ,in for loop add 1
-            var IntDayOfWeek = (int)dtDateTime.AddSeconds(content.list[0].dt).ToLocalTime().DayOfWeek;
-
-            for (int i = 0; i < 6; i++)
-            {
-                string _day, _temp, _weather, _describe;
-                //day of week unix timestamp to day of week
-
-                _day = BasicData.DayOfWeek[LanguageValue, IntDayOfWeek+i];
-                //day temperature
-                _temp = content.list[i].temp.max + BasicData.TempUnit[UnitsValue] + "/ " + content.list[i].temp.min + BasicData.TempUnit[UnitsValue];
-                //weather icon
-                _weather = BasicData.IconDict[content.list[i].weather[0].icon];
-                //weather describe
-                _describe = "";
-
-            }
-        }
-
-        */
-
         /*
          * Reacquire data and update window
          */
@@ -340,26 +280,29 @@ namespace Weather
             if (city != null)
             {
                 CityName.Text = city.name;
-                CountryName.Text = city.country.content;
+                CountryCode.Text = city.country.content;
                 City1 = city.woeid;
-                ParseYahooData("");
-                //UpdateMainWindowWithOMP(OMP.OpenWeatherMapAPI.GetWeatherData(city._id.ToString(), API.apikey(), UnitsList[UnitsValue]).Result);
+                TheInitialization("");
             }
         }
-        
+        /*
+         * Do not use global variable anymore [CitysOfCountry]
+         * It will delay and wait the other thread
+         * Pass variable and return sorted list
+         * Display sender source
+         */
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            var useless = CityData.getCityData(sender.Text).Result;
-            var matchingContacts = CityDataSource.GetMatching(sender.Text);
-            //to list override
-            sender.ItemsSource = matchingContacts.ToList();
-            //if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            //{
-            //    var useless=CityData.getCityData(sender.Text).Result;
-            //    var matchingContacts = CityDataSource.GetMatching(sender.Text);
-            //    //to list override
-            //    sender.ItemsSource = matchingContacts.ToList();
-            //}
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                var useless = CityData.getCityData(sender.Text).Result;
+                if (useless.query.count != 0)
+                {
+                    var matchingContacts = CityDataSource.GetMatching(useless.query.results.place.OrderBy(c => c.name).ToList(), sender.Text);
+                    //to list override
+                    sender.ItemsSource = matchingContacts.ToList();
+                }
+            }
         }
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -370,16 +313,7 @@ namespace Weather
             }
             else
             {
-                var match = CityDataSource.GetMatching(args.QueryText);
-                if (match.Count() >= 1)
-                {
-                    //Choose the first match
-                    SelectCity(match.FirstOrDefault());
-                }
-                else
-                {
-                    NoResults.Visibility = Visibility.Visible;
-                }
+                 NoResults.Visibility = Visibility.Visible;
             }
         }
 
@@ -387,7 +321,7 @@ namespace Weather
         {
             var c = args.SelectedItem as CityData.Place;
 
-            sender.Text = string.Format("{0} --{1}-", c.name, c.country.content);
+            sender.Text = string.Format("{0} {1}", c.name, c.country.content);
         }
         #endregion
 
@@ -469,8 +403,6 @@ namespace Weather
                 localSettings.Values["Unit"] = UnitsValue;
             }   
         }
-        #endregion
-
         /*
          * resize the grid view
          */
@@ -480,7 +412,68 @@ namespace Weather
             panel.ItemHeight =bottomPad.ActualHeight-2;
             panel.ItemWidth = bottomPad.ActualWidth/6.0;
         }
+        #endregion
 
+        /* OMP 
+
+        private OMP.RootObject ParseOMPData(string cache)
+        {
+            if (cache == "")
+            {
+                return OMP.OpenWeatherMapAPI.GetWeatherData(City1, UnitsList[UnitsValue]).Result;
+            }
+            else
+            {
+                //parse json data
+                var serializer = new DataContractJsonSerializer(typeof(OMP.RootObject));
+                var ms = new MemoryStream(Encoding.UTF8.GetBytes(cache));
+                return (OMP.RootObject)serializer.ReadObject(ms);
+            }
+        }
+
+        private void UpdateMainWindowWithOMP(OMP.RootObject content)
+        {
+            OMP_Data = content;
+            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
+            //Get city data and lat lon
+            //CityData.readCityData();
+
+            CityName.Text = content.city.name;
+            RegionInfo CountryEN = new RegionInfo(content.city.country);
+            CountryName.Text = CountryEN.EnglishName;
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
+            TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
+
+            WindSpeed.Text = BasicData.LANG[6, LanguageValue] + content.list[0].speed + BasicData.WindUnit[UnitsValue];
+            Humidity.Text = BasicData.LANG[7, LanguageValue] + content.list[0].humidity + "%";
+            Pressure.Text = content.list[0].pressure+"hPa";
+
+            var w = (int)((content.list[0].deg + 22.5) % 360 / 45);
+            //wind icon      
+            WindIcon.Text = BasicData.Wind[2, w];
+            //N or 北风
+            WindDegree.Text = BasicData.Wind[LanguageValue, w];
+            //calculate one time ,in for loop add 1
+            var IntDayOfWeek = (int)dtDateTime.AddSeconds(content.list[0].dt).ToLocalTime().DayOfWeek;
+
+            for (int i = 0; i < 6; i++)
+            {
+                string _day, _temp, _weather, _describe;
+                //day of week unix timestamp to day of week
+
+                _day = BasicData.DayOfWeek[LanguageValue, IntDayOfWeek+i];
+                //day temperature
+                _temp = content.list[i].temp.max + BasicData.TempUnit[UnitsValue] + "/ " + content.list[i].temp.min + BasicData.TempUnit[UnitsValue];
+                //weather icon
+                _weather = BasicData.IconDict[content.list[i].weather[0].icon];
+                //weather describe
+                _describe = "";
+
+            }
+        }
+
+        */
     }
 
 }
