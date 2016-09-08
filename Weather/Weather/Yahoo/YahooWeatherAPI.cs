@@ -27,6 +27,7 @@ namespace Weather.Yahoo
             {
                 var response = getResponse(idOrCity, unit, IsCityName).Result;
                 var result = responseToString(response).Result;
+                
                 //parse json
                 var serializer = new DataContractJsonSerializer(typeof(RootObject));
                 var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
@@ -80,6 +81,7 @@ namespace Weather.Yahoo
             return await Task.Run(() =>
             {
                 var v = c.Content.ReadAsStringAsync();  // return c.Content.ReadAsStringAsync(); still not work
+                
                 return v;
             }).ConfigureAwait(continueOnCapturedContext: false);
         }

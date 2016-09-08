@@ -7,14 +7,12 @@ using Windows.UI.Xaml.Controls;
 using System.Text;
 using Windows.Storage;
 using System.Runtime.Serialization.Json;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Globalization;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 namespace Weather
@@ -51,17 +49,15 @@ namespace Weather
         #endregion
 
         #region global variable
-        private ObservableCollection<string> LanguageList = new ObservableCollection<string>() { "English", "Chinese" };
-        private ObservableCollection<string> UnitsList = new ObservableCollection<string>() { "Metric", "Imperial" };
-
         private Yahoo.RootObject Yahoo_Data;
+        private CustomTitle customTitle = null;
+        public static MainPage Current;
 
         private int UnitsValue;
         private int LanguageValue;
         private string City1;
-        private CustomTitleBar customTitleBar = null;
         #endregion
-
+        
         public MainPage()
         {
             //Transparent
@@ -75,26 +71,29 @@ namespace Weather
             ApplicationView.PreferredLaunchViewSize = new Size(1040, 660);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //clearSettings();
-            this.InitializeComponent();            
+            this.InitializeComponent();
             //add custom title bar
-            this.AddTitleBar();
+            AddTitleBar();
             //Read settings and return Weather cache
             string WeatherCache = readSettings();
             TheInitialization(WeatherCache);
-            
+            Current = this;
         }
 
         /*
          * Add custom title bar 
+         * Make the main page's content a child of the title bar,
+         * and make the title bar the new page content.
          */
-        public void AddTitleBar()
+        private void AddTitleBar()
         {
-            customTitleBar = new CustomTitleBar();
+            customTitle = new CustomTitle();
+            customTitle.EnableControlsInTitleBar();
 
             UIElement mainContent = this.Content;
             this.Content = null;
-            customTitleBar.SetPageContent(mainContent);
-            this.Content = customTitleBar;
+            customTitle.SetPageContent(mainContent);
+            this.Content = customTitle;
         }
         /*
          * clear settings
@@ -102,20 +101,6 @@ namespace Weather
         private async void clearSettings()
         {
             await ApplicationData.Current.ClearAsync();
-        }
-        /*
-         * Initialization 
-         * parse cache to OpenWeatherMapAPI.RootObject or get data from API
-         * if api value = 1 
-         *    get OMP data
-         * else
-         *    get Yahoo data
-         */
-        private void TheInitialization(string WeatherCache)
-        {
-            bgName.Source = chooseImage();
-            Yahoo.RootObject WeatherData = ParseYahooData(WeatherCache);
-            UpdateMainWindowWithYahoo(WeatherData);
         }
         /*
          * ContainsKey to determine whether need to initialize settings or not 
@@ -165,6 +150,52 @@ namespace Weather
                 return localSettings.Values["WeatherData"].ToString();
         }
         /*
+         * Initialization 
+         * parse cache to OpenWeatherMapAPI.RootObject or get data from API
+         *    get Yahoo data
+         */
+        private void TheInitialization(string WeatherCache)
+        {
+            Initialize_SettingPage();
+            Initialize_MainPage();
+            Yahoo.RootObject WeatherData = ParseYahooData(WeatherCache);
+            UpdateMainWindowWithYahoo(WeatherData);
+        }
+        /*
+         * Initialize setting page
+         * Initialize the settings control with ObservableCollection
+         * give the initialization value 
+         */
+        private void Initialize_SettingPage()
+        {
+            ObservableCollection<string> LanguageList = new ObservableCollection<string>() { "English", "Chinese" };
+            ObservableCollection<string> UnitsList = new ObservableCollection<string>() { "Metric", "Imperial" };
+            //Initialize the settings control
+            languageBox.DataContext = LanguageList;
+            UnitsBox.DataContext = UnitsList;
+
+            pivotSetting.Header = BasicData.LANG[0, LanguageValue];
+            pivotContact.Header = BasicData.LANG[1, LanguageValue];
+            pivotAbout.Header = BasicData.LANG[2, LanguageValue];
+            languageBox.Header = BasicData.LANG[3, LanguageValue];
+            UnitsBox.Header = BasicData.LANG[4, LanguageValue];
+
+            //selected Item will call languageBox_SelectionChanged function to select
+            languageBox.SelectedItem = LanguageList[LanguageValue];
+            UnitsBox.SelectedItem = UnitsList[UnitsValue];
+        }
+        /*
+         * Initialize the mainpage without weather data
+         * Initialize searchbox PlaceholderText with languageValue
+         * Initialize todaydate
+         */
+        private void Initialize_MainPage()
+        {
+            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
+            updateName.Text = BasicData.LANG[9, LanguageValue];
+            TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
+        }
+        /*
          * parse Yahoo json data
          */
         private Yahoo.RootObject ParseYahooData(string cache)
@@ -184,31 +215,38 @@ namespace Weather
                 return (Yahoo.RootObject)serializer.ReadObject(ms);
             }
         }
-
+        /*
+         * Update main window 
+         * Initialize control
+         *  -> searchbox
+         *  -> CityName
+         *  -> CountryCode
+         *  -> WindSpeed
+         *  -> Humidity
+         *  -> Pressure
+         *  -> TodayDate
+         *  -> WeatherIcon
+         *  -> TempMax
+         *  -> TempMin
+         *  -> dayofweek
+         */
         private void UpdateMainWindowWithYahoo(Yahoo.RootObject content)
         {
-            Yahoo_Data = content;
-            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
             //UTC time offset -> 28800 (China)
-            double UtcOffset = TimeZoneInfo.Local.BaseUtcOffset.TotalSeconds;
-            
-            //Get city data 
-            //CityData.readCityData();
+            //double UtcOffset = TimeZoneInfo.Local.BaseUtcOffset.TotalSeconds;
+            Tile.TileUpdate();
+            Yahoo_Data = content;
             var con = content.query.results.channel;
 
             CityName.Text = con.location.city;
             string alpha2 = ISO3166.FromName(con.location.country).Alpha2;
-            CountryCode.Text = ","+alpha2;
+            CountryCode.Text = "."+alpha2;
             
             WindSpeed.Text = BasicData.LANG[6, LanguageValue] + con.wind.speed+ BasicData.WindUnit[UnitsValue];
             Humidity.Text = BasicData.LANG[7, LanguageValue] + con.atmosphere.humidity + "%";
             var p = Math.Round(Convert.ToDouble(con.atmosphere.pressure) / 1000.0, 1);
             Pressure.Text = BasicData.LANG[8, LanguageValue] + p.ToString()+"k"+con.units.pressure;
-            updateName.Text = BasicData.LANG[9, LanguageValue];
 
-            Tile.TileUpdate();
-
-            TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
             WeatherIcon.Text= BasicData.IconDict2[con.item.forecast[0].code];
             TempMax.Text = con.item.forecast[0].high + BasicData.TempUnit[UnitsValue];
             TempMin.Text= "/"+con.item.forecast[0].low + BasicData.TempUnit[UnitsValue];
@@ -225,8 +263,8 @@ namespace Weather
             //N or 北风
             WindDegree.Text = BasicData.Wind[LanguageValue, w];
 
-            var c=content.query.results.channel.astronomy.sunrise;
-            var s=content.query.results.channel.astronomy.sunset;
+            var c=con.astronomy.sunrise;
+            var s=con.astronomy.sunset;
             var wea = con.item.forecast.Skip(1).Take(6).ToList();
             string[] CustomColor = { "#00f39f", "#ff91cf", "#1ee7e9", "#9a37c3", "#0693fb", "#fba068" };
             ObservableCollection<Yahoo.Recording> _tempF=new ObservableCollection<Yahoo.Recording>();
@@ -249,29 +287,12 @@ namespace Weather
             }
             Forecas = _tempF;
         }
-
-        /*
-         * Reacquire data and update window
-         */
-        private void RefreshButton(object sender, RoutedEventArgs e)
-        {
-            TheInitialization("");
-        }
         /*
          * reload window for reloading settings
          */
         private void reloadWindow()
         {
             UpdateMainWindowWithYahoo(Yahoo_Data);
-        }
-
-        private BitmapImage chooseImage()
-        {
-            Random rnd = new Random();
-            //if (BasicData.weatherType.Contains(weatherName))
-            //    return new BitmapImage(new Uri("ms-appx://Weather/Assets/Weather/" + weatherName + "0.jpg"));
-            //else
-            return new BitmapImage(new Uri("ms-appx://Weather/Assets/sun" + rnd.Next(0, 4) + ".jpg"));
         }
 
         #region Suggest Box
@@ -326,28 +347,7 @@ namespace Weather
         #endregion
 
         #region Control Event
-        /*
-         * Option button click 
-         * Initialize the settings control with ObservableCollection
-         */
-        private void Option_Click(object sender, RoutedEventArgs e)
-        {
-            //Initialize the settings control
-            languageBox.DataContext = LanguageList;
-            UnitsBox.DataContext = UnitsList;
 
-            pivotSetting.Header = BasicData.LANG[0, LanguageValue];
-            pivotContact.Header = BasicData.LANG[1, LanguageValue];
-            pivotAbout.Header = BasicData.LANG[2, LanguageValue];
-            languageBox.Header = BasicData.LANG[3, LanguageValue];
-            UnitsBox.Header = BasicData.LANG[4, LanguageValue];
-
-            //selected Item will call languageBox_SelectionChanged function to select
-            languageBox.SelectedItem = LanguageList[LanguageValue];
-            UnitsBox.SelectedItem = UnitsList[UnitsValue];
-
-            SettingSplitView.IsPaneOpen = !SettingSplitView.IsPaneOpen;
-        }
         /*
          * Ellipse pointer entered animation
          */
@@ -412,6 +412,7 @@ namespace Weather
             panel.ItemHeight =bottomPad.ActualHeight-2;
             panel.ItemWidth = bottomPad.ActualWidth/6.0;
         }
+
         #endregion
 
         /* OMP 
@@ -474,6 +475,7 @@ namespace Weather
         }
 
         */
+
     }
 
 }
