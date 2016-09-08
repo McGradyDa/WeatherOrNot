@@ -98,26 +98,27 @@
     <Content Include="Assets\sun1.jpg" />
     <Content Include="Assets\Weather\Clouds0.jpg" />
     <Content Include="Assets\Weather\Rain0.jpg" />
-    <Content Include="city3.json" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CityData.cs" />
     <Compile Include="CityDataSource.cs" />
-    <Compile Include="OpenWeatherMapAPI.cs" />
     <Compile Include="BasicData.cs" />
+    <Compile Include="CustomTitle.xaml.cs">
+      <DependentUpon>CustomTitle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ISO3166.cs" />
     <Compile Include="MercatorProjection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OMP\OpenWeatherMapAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Tile.cs" />
+    <Compile Include="Yahoo\YahooWeatherAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -141,7 +142,6 @@
     <Content Include="Assets\Tile\Thunderstorm0.jpg" />
     <Content Include="Assets\Weather\Snow0.jpg" />
     <Content Include="Assets\Weather\Thunderstorm0.jpg" />
-    <Content Include="Assets\worldmap.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -156,13 +156,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="CustomTitle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
