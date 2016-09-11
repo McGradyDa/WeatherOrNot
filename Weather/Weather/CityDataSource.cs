@@ -16,10 +16,18 @@ namespace Weather
 
         public static IEnumerable<CityData.Place> GetMatching(List<CityData.Place> Citys, string query)
         {
-            return Citys
-                .Where(c => c.name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase) > -1)
-                .OrderByDescending(c => c.name.StartsWith(query, StringComparison.CurrentCultureIgnoreCase))
-                .ThenByDescending(c => c.country.content.StartsWith(query, StringComparison.CurrentCultureIgnoreCase));
+            if (Citys.Count < 5)
+            {
+                return Citys;
+            }
+            else
+            {
+                return Citys
+                    .Where(c => c.name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase) > -1)
+                    .OrderByDescending(c => c.name.StartsWith(query, StringComparison.CurrentCultureIgnoreCase))
+                    .ThenByDescending(c => c.country.content.StartsWith(query, StringComparison.CurrentCultureIgnoreCase));
+            }
+
         }
     }
 }

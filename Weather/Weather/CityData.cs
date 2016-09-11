@@ -10,18 +10,22 @@ namespace Weather
 {
     public class CityData
     {
-        public async static Task<RootObject> getCityData(string inputString)
+        public async static Task<string> getCityData(string inputString)
         {
             return await Task.Run(() =>
             {
                 var response = getResponse(inputString).Result;
-                var result = responseToString(response).Result;
-                //parse json
-                var serializer = new DataContractJsonSerializer(typeof(RootObject));
-                var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+                return responseToString(response).Result;
 
-                return (RootObject)serializer.ReadObject(ms);
             }).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public static T parseJson<T>(string result)
+        {
+            //parse json
+            var serializer = new DataContractJsonSerializer(typeof(T));
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+            return (T)serializer.ReadObject(ms);
         }
 
         #region get http data
@@ -240,7 +244,13 @@ namespace Weather
             //for autosuggestbox
             public override string ToString()
             {
-                return string.Format("{0} {1} {2}", name, admin1.content, country.code);
+                //fix bug admin==null
+                string b = "";
+                if (admin1 != null)
+                {
+                    b = admin1.content;
+                }
+                return string.Format("{0} {1} {2}", name, b, country.code);
             }
         }
 
@@ -249,6 +259,14 @@ namespace Weather
         {
             [DataMember]
             public List<Place> place { get; set; }
+
+        }
+
+        [DataContract]
+        public class Results2
+        {
+            [DataMember]
+            public Place place { get; set; }
         }
 
         [DataContract]
@@ -265,10 +283,30 @@ namespace Weather
         }
 
         [DataContract]
+        public class Query2
+        {
+            [DataMember]
+            public int count { get; set; }
+            [DataMember]
+            public string created { get; set; }
+            [DataMember]
+            public string lang { get; set; }
+            [DataMember]
+            public Results2 results { get; set; }
+        }
+
+        [DataContract]
         public class RootObject
         {
             [DataMember]
             public Query query { get; set; }
+        }
+
+        [DataContract]
+        public class RootObject2
+        {
+            [DataMember]
+            public Query2 query { get; set; }
         }
         #endregion
 

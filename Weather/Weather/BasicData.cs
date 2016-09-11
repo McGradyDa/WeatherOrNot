@@ -33,16 +33,20 @@ namespace Weather
 
         public static string[,] LANG =
         {
-            {"Settings","设置" },
-            {"Contact","联系" },
-            {"About","关于"},
-            {"Language","语言" },
-            {"Unit","单位"},
-            {"Search","搜索" },
+            { "Settings","设置" },
+            { "Contact","联系" },
+            { "About","关于"},
+            { "Language","语言" },
+            { "Unit","单位"},
+            { "Search","搜索" },
             { "Wind ","风速 "},
             { "Hum ","湿度 "},
             { "Press ","气压 "},
-            {"Update","更新时间" },
+            { "Update","更新时间" },
+            { "Choose","选择"},
+            { "You choose:","你选择的位置是:"},
+            { "Latitude","纬度"},
+            { "Longitude","经度"},
         };
         public static string[,] Describe =
         {
