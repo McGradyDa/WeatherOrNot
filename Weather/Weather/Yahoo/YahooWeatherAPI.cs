@@ -16,7 +16,6 @@ namespace Weather.Yahoo
         public string temp { get; set; }
         public string weather { get; set; }
         public string describe { get; set; }
-        public string customColor { get; set; }
     }
 
     public class YahooWeatherAPI
@@ -86,12 +85,15 @@ namespace Weather.Yahoo
             }).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
+
+    #region
+
     /*
-"distance": "km",
-"pressure": "mb",
-"speed": "km/h",
-"temperature": "C"
-*/
+    "distance": "km",
+    "pressure": "mb",
+    "speed": "km/h",
+    "temperature": "C"
+    */
 
     [DataContract]
     public class Units
@@ -282,4 +284,6 @@ namespace Weather.Yahoo
         [DataMember]
         public Query query { get; set; }
     }
+
+    #endregion
 }

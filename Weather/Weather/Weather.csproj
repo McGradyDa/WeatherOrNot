@@ -92,6 +92,7 @@
     <Content Include="Assets\avatar.jpg" />
     <Content Include="Assets\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
+    <Content Include="Assets\locate.png" />
     <Content Include="Assets\RectangleBG\1.1.jpg" />
     <Content Include="Assets\RectangleBG\1.jpg" />
     <Content Include="Assets\sun3.jpg" />
@@ -106,12 +107,15 @@
     </Compile>
     <Compile Include="CityData.cs" />
     <Compile Include="CityDataSource.cs" />
-    <Compile Include="BasicData.cs" />
+    <Compile Include="ExtendedSplash.xaml.cs">
+      <DependentUpon>ExtendedSplash.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\BasicData.cs" />
     <Compile Include="CustomTitle.xaml.cs">
       <DependentUpon>CustomTitle.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ISO3166.cs" />
-    <Compile Include="MercatorProjection.cs" />
+    <Compile Include="Utils\ISO3166.cs" />
+    <Compile Include="Utils\MercatorProjection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -157,6 +161,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="CustomTitle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExtendedSplash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
