@@ -93,10 +93,8 @@
     <Content Include="Assets\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
     <Content Include="Assets\locate.png" />
-    <Content Include="Assets\RectangleBG\1.1.jpg" />
-    <Content Include="Assets\RectangleBG\1.jpg" />
-    <Content Include="Assets\sun3.jpg" />
     <Content Include="Assets\sun1.jpg" />
+    <Content Include="Assets\sun3.jpg" />
     <Content Include="Assets\Weather\Clouds0.jpg" />
     <Content Include="Assets\Weather\Rain0.jpg" />
     <None Include="project.json" />
@@ -107,9 +105,9 @@
     </Compile>
     <Compile Include="CityData.cs" />
     <Compile Include="CityDataSource.cs" />
-    <Compile Include="ExtendedSplash.xaml.cs">
-      <DependentUpon>ExtendedSplash.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="GaussianBlur.cs" />
+    <Compile Include="SuggestBox.cs" />
+    <Compile Include="Sunrise.cs" />
     <Compile Include="Utils\BasicData.cs" />
     <Compile Include="CustomTitle.xaml.cs">
       <DependentUpon>CustomTitle.xaml</DependentUpon>
@@ -161,10 +159,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="CustomTitle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ExtendedSplash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
