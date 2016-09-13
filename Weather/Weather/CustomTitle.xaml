@@ -16,7 +16,7 @@
         <Grid x:Name="TitleBar" Grid.Row="0" VerticalAlignment="Top" Height="32" Canvas.ZIndex="3">
             <!--33000000 button background color make them same bg color-->
             <Rectangle x:Name="BackgroundElement" Fill="#33000000" />
-            <Grid Padding="0,0,200,0">
+            <Grid Padding="0,0,200,0" IsTapEnabled="False">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>

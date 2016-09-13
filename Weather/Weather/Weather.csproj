@@ -105,9 +105,11 @@
     </Compile>
     <Compile Include="CityData.cs" />
     <Compile Include="CityDataSource.cs" />
+    <Compile Include="ControlEvent.cs" />
     <Compile Include="GaussianBlur.cs" />
     <Compile Include="SuggestBox.cs" />
     <Compile Include="Sunrise.cs" />
+    <Compile Include="UpdateMainWindow.cs" />
     <Compile Include="Utils\BasicData.cs" />
     <Compile Include="CustomTitle.xaml.cs">
       <DependentUpon>CustomTitle.xaml</DependentUpon>
