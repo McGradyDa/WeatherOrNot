@@ -260,7 +260,7 @@ namespace Weather
             collection.Add(new ISO3166Country("Sweden", "SE", "SWE", 752));
             collection.Add(new ISO3166Country("Switzerland", "CH", "CHE", 756));
             collection.Add(new ISO3166Country("Syrian Arab Republic", "SY", "SYR", 760));
-            collection.Add(new ISO3166Country("Taiwan, Province of China[a]", "TW", "TWN", 158));
+            collection.Add(new ISO3166Country("Taiwan", "TW", "TWN", 158));
             collection.Add(new ISO3166Country("Tajikistan", "TJ", "TJK", 762));
             collection.Add(new ISO3166Country("Tanzania, United Republic of", "TZ", "TZA", 834));
             collection.Add(new ISO3166Country("Thailand", "TH", "THA", 764));

@@ -48,7 +48,7 @@ namespace Weather
             { "Language","语言" ,"言語" ,"언어" ,"Idioma" },
             { "Unit","单位","単位" ,"단위" ,"Unidad" },
             { "Search","搜索" ,"検索" ,"검색" ,"Buscar" },
-            { "Wind ","风速 ","風速" ,"바람 속도" ,"Viento" },
+            { "Wind ","风速 ","風速" ,"바람" ,"Viento" },
             { "Hum ","湿度 ","湿度" ,"습도" ,"Humedad" },
             { "Press ","气压 ","圧力" ,"압력" ,"Presión" },
             { "Update","更新时间" ,"更新" ,"업데이트" ,"Update" },
