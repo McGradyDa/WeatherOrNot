@@ -245,12 +245,19 @@ namespace Weather
             public override string ToString()
             {
                 //fix bug admin==null
-                string b = "";
+                string ad1 = "", ad2 = "";
                 if (admin1 != null)
                 {
-                    b = admin1.content;
+                    ad1 = admin1.content;
                 }
-                return string.Format("{0} {1} {2}", name, b, country.code);
+                if (admin2 != null)
+                {
+                    if (admin2.content != ad1 && admin2.content != name)
+                    {
+                        ad2 = admin2.content;
+                    }
+                }
+                return string.Format("{0} {1} {2} {3}", name, ad1, ad2, country.code);
             }
         }
 

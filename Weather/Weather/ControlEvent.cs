@@ -98,6 +98,56 @@ namespace Weather
 
         }
 
+        private void searchbox_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            searchbox.Width = 250;
+        }
+
+        private void searchbox_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            searchbox.Width = 200;
+        }
+
+        private void isHideSunToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                isHideSunGraph = toggleSwitch.IsOn;
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["isHideSunGraph"] = isHideSunGraph;
+                if (toggleSwitch.IsOn == true)
+                {
+                    sunGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    sunGrid.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void isHideUpdateToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                isHideUpdateTime = toggleSwitch.IsOn;
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["isHideUpdateTime"] = isHideUpdateTime;
+                if (toggleSwitch.IsOn == true)
+                {
+                    updateName.Visibility = Visibility.Collapsed;
+                    updateTimeTextBlock.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    updateName.Visibility = Visibility.Visible;
+                    updateTimeTextBlock.Visibility = Visibility.Visible;
+                }
+
+            }
+        }
         #endregion
     }
 }

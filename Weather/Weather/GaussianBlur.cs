@@ -18,72 +18,63 @@ namespace Weather
 
         #region gaussian blur
 
-        SpriteVisual effectVisual;
-        SpriteVisual effectVisual2;
-
-        private void SizeVisual()
+        private void SizeVisual(SpriteVisual effectVisual,Grid name)
         {
-            if (this.effectVisual != null)
+            if (effectVisual != null)
             {
-                this.effectVisual.Size = new System.Numerics.Vector2(
-                    (float)this.rightBottomBlur.ActualWidth, (float)this.rightBottomBlur.ActualHeight);
-            }
-            if (this.effectVisual2 != null)
-            {
-                this.effectVisual2.Size = new System.Numerics.Vector2(
-                    (float)this.leftBottomBlur.ActualWidth, (float)this.leftBottomBlur.ActualHeight);
+                effectVisual.Size = new System.Numerics.Vector2(
+                    (float)name.ActualWidth, (float)name.ActualHeight);
             }
         }
+
         /*
          * Gaussian blur effect
          */
         private void OnLoaded(object sender, RoutedEventArgs args)
         {
+            Grid[] _list = { rightBottomBlur, leftBottomBlur, splitBlur };
+            for (int i = 0; i < _list.Length; i++)
+            {
+                BlurList.listOfGrid[i] = _list[i];
+                //Windows.UI.Composition.Visual
+                var gridVisual = ElementCompositionPreview.GetElementVisual(BlurList.listOfGrid[i]);
+                var compositor = gridVisual.Compositor;
+                BlurList.listOftVisual[i] = compositor.CreateSpriteVisual();
 
-            //Windows.UI.Composition.Visual
-            var gridVisual = ElementCompositionPreview.GetElementVisual(this.rightBottomBlur);
-            var compositor = gridVisual.Compositor;
-            effectVisual = compositor.CreateSpriteVisual();
+                SizeVisual(BlurList.listOftVisual[i], BlurList.listOfGrid[i]);
 
-            //Windows.UI.Composition.Visual
-            var gridVisual2 = ElementCompositionPreview.GetElementVisual(this.leftBottomBlur);
-            var compositor2 = gridVisual2.Compositor;
-            effectVisual2 = compositor.CreateSpriteVisual();
+                var effectFactory = compositor.CreateEffectFactory(
+                    blurEffect,
+                    new string[] { "Blur.BlurAmount" }
+                    );
+                var effectBrush = effectFactory.CreateBrush();
+                effectBrush.SetSourceParameter("source", compositor.CreateBackdropBrush());
+                BlurList.listOftVisual[i].Brush = effectBrush;
 
-
-            this.SizeVisual();
-
-
-            var effectFactory = compositor.CreateEffectFactory(
-                blurEffect,
-                new string[] { "Blur.BlurAmount" }
-                );
-            var effectBrush = effectFactory.CreateBrush();
-            effectBrush.SetSourceParameter("source", compositor.CreateBackdropBrush());
-            effectVisual.Brush = effectBrush;
-
-
-            var effectFactory2 = compositor2.CreateEffectFactory(
-                blurEffect,
-                new string[] { "Blur.BlurAmount" }
-                );
-            var effectBrush2 = effectFactory2.CreateBrush();
-            effectBrush2.SetSourceParameter("source", compositor2.CreateBackdropBrush());
-            effectVisual2.Brush = effectBrush2;
-
-            ElementCompositionPreview.SetElementChildVisual(this.rightBottomBlur, this.effectVisual);
-            ElementCompositionPreview.SetElementChildVisual(this.leftBottomBlur, this.effectVisual2);
+                ElementCompositionPreview.SetElementChildVisual(BlurList.listOfGrid[i], BlurList.listOftVisual[i]);
+            }
 
 
         }
+
         /*
          * leftBottomBlur and rightBottomBlur use same size changed event
          */
         private void OnGridSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.SizeVisual();
+            for (int i = 0; i < BlurList.listOfGrid.Length; i++)
+            {
+                SizeVisual(BlurList.listOftVisual[i], BlurList.listOfGrid[i]);
+            }
+
         }
 
         #endregion
+
+        public class BlurList
+        {
+            public static Grid[] listOfGrid { get; set; } = new Grid[3];
+            public static SpriteVisual[] listOftVisual { get; set; } = new SpriteVisual[3];
+        }
     }
 }

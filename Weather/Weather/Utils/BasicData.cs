@@ -56,6 +56,8 @@ namespace Weather
             { "You choose:","你选择的位置是:","あなたが選択した場所" ,"위치 당신이 선택" ,"Ubicación que elija" },
             { "Latitude","纬度","緯度" ,"위도" ,"Latitud" },
             { "Longitude","经度","経度" ,"경도" ,"Longitud" },
+            { "Hide sun graph","隐藏日出时间","隠す日の出時間","숨기기 일출 시간",""},
+            { "Hide update time","隐藏更新时间","非表示の更新","숨기기 업데이트",""},
         };
 
         public static string[,] Describe =
