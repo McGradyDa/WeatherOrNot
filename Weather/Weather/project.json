@@ -2,6 +2,7 @@
   "dependencies": {
     "Microsoft.Net.Http": "2.2.29",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+    "NotificationsExtensions.Win10": "14332.0.2",
     "Win2D.uwp": "1.19.0"
   },
   "frameworks": {

@@ -90,9 +90,64 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\avatar.jpg" />
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
+    <Content Include="Assets\ICON\0.png" />
+    <Content Include="Assets\ICON\1.png" />
+    <Content Include="Assets\ICON\10.png" />
+    <Content Include="Assets\ICON\11.png" />
+    <Content Include="Assets\ICON\12.png" />
+    <Content Include="Assets\ICON\13.png" />
+    <Content Include="Assets\ICON\14.png" />
+    <Content Include="Assets\ICON\15.png" />
+    <Content Include="Assets\ICON\16.png" />
+    <Content Include="Assets\ICON\17.png" />
+    <Content Include="Assets\ICON\18.png" />
+    <Content Include="Assets\ICON\19.png" />
+    <Content Include="Assets\ICON\2.png" />
+    <Content Include="Assets\ICON\20.png" />
+    <Content Include="Assets\ICON\21.png" />
+    <Content Include="Assets\ICON\22.png" />
+    <Content Include="Assets\ICON\23.png" />
+    <Content Include="Assets\ICON\24.png" />
+    <Content Include="Assets\ICON\25.png" />
+    <Content Include="Assets\ICON\26.png" />
+    <Content Include="Assets\ICON\27.png" />
+    <Content Include="Assets\ICON\28.png" />
+    <Content Include="Assets\ICON\29.png" />
+    <Content Include="Assets\ICON\3.png" />
+    <Content Include="Assets\ICON\30.png" />
+    <Content Include="Assets\ICON\31.png" />
+    <Content Include="Assets\ICON\32.png" />
+    <Content Include="Assets\ICON\3200.png" />
+    <Content Include="Assets\ICON\33.png" />
+    <Content Include="Assets\ICON\34.png" />
+    <Content Include="Assets\ICON\35.png" />
+    <Content Include="Assets\ICON\36.png" />
+    <Content Include="Assets\ICON\37.png" />
+    <Content Include="Assets\ICON\38.png" />
+    <Content Include="Assets\ICON\39.png" />
+    <Content Include="Assets\ICON\4.png" />
+    <Content Include="Assets\ICON\40.png" />
+    <Content Include="Assets\ICON\41.png" />
+    <Content Include="Assets\ICON\42.png" />
+    <Content Include="Assets\ICON\43.png" />
+    <Content Include="Assets\ICON\44.png" />
+    <Content Include="Assets\ICON\45.png" />
+    <Content Include="Assets\ICON\46.png" />
+    <Content Include="Assets\ICON\47.png" />
+    <Content Include="Assets\ICON\5.png" />
+    <Content Include="Assets\ICON\6.png" />
+    <Content Include="Assets\ICON\7.png" />
+    <Content Include="Assets\ICON\8.png" />
+    <Content Include="Assets\ICON\9.png" />
     <Content Include="Assets\locate.png" />
+    <Content Include="Assets\locate2.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square310x310Logo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\sun1.jpg" />
     <Content Include="Assets\sun3.jpg" />
     <Content Include="Assets\Weather\Clouds0.jpg" />
@@ -146,13 +201,12 @@
     <Content Include="Assets\Tile\Thunderstorm0.jpg" />
     <Content Include="Assets\Weather\Snow0.jpg" />
     <Content Include="Assets\Weather\Thunderstorm0.jpg" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +228,7 @@
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
