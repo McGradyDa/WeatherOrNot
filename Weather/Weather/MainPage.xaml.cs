@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,28 +21,17 @@ namespace Weather
     /// </summary>
     /// 
 
-    public sealed partial class MainPage : Page,INotifyPropertyChanged
+    public sealed partial class MainPage : Page ,INotifyPropertyChanged
     {
-        #region For Grid view
+        #region INPC
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        private ObservableCollection<Yahoo.Recording> tempF;
-
-        private ObservableCollection<Yahoo.Recording> Forecas
-        {
-            get { return tempF; }
-            set
-            {
-                tempF = value;
-                NotifyPropertyChanged("Forecas");
             }
         }
         #endregion
@@ -53,11 +41,26 @@ namespace Weather
         private CustomTitle customTitle = null;
         public static MainPage Current;
 
-        private int UnitsValue;
-        private int LanguageValue;
-        private string City1;
+        public static int UnitsValue;
+        public static int LanguageValue;
+        public static double LatValue;
+        public static double LongValue;
+        private bool isHideUpdateTime;
+        private bool isHideSunGraph;
+        public static string City1;
+
+        private Model.DataModel _Model;
+        public Model.DataModel Model
+        {
+            get { return _Model; }
+            set
+            {
+                _Model = value;
+                NotifyPropertyChanged("Model");
+            }
+        }
         #endregion
-        
+
         public MainPage()
         {
             //Transparent
@@ -72,8 +75,10 @@ namespace Weather
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //clearSettings();
             this.InitializeComponent();
-            //add custom title bar
             AddTitleBar();
+            this.Loaded += OnLoaded;
+            MapForWeather.MapRightTapped += MapForWeather_MapRightTapped;
+            sunAnimatePath();
             //Read settings and return Weather cache
             string WeatherCache = readSettings();
             TheInitialization(WeatherCache);
@@ -133,13 +138,19 @@ namespace Weather
                 localSettings.Values["UpdateDay"] = DateTime.UtcNow.Day;
                 //2016 / 8 / 31 20:07:20
                 localSettings.Values["UpdateTime"] = DateTime.Now.ToString();
+                //hide update time
+                localSettings.Values["isHideUpdateTime"] = false;
+                //hide sun graph
+                localSettings.Values["isHideSunGraph"] = false;
                 //Weather Data
                 localSettings.Values["WeatherData"] = "";
             }
             UnitsValue = (int)localSettings.Values["Unit"];
             LanguageValue = (int)localSettings.Values["Language"];
             City1 = localSettings.Values["City1"].ToString();
-            updateTime.Text = localSettings.Values["UpdateTime"].ToString();
+            //UpdateTime.Text = localSettings.Values["UpdateTime"].ToString();
+            isHideUpdateTime = (bool)localSettings.Values["isHideUpdateTime"];
+            isHideSunGraph = (bool)localSettings.Values["isHideSunGraph"];
 
             if (DateTime.UtcNow.Day!= Convert.ToInt32(localSettings.Values["UpdateDay"].ToString()))
             {
@@ -156,7 +167,6 @@ namespace Weather
          */
         private void TheInitialization(string WeatherCache)
         {
-            Initialize_SettingPage();
             Initialize_MainPage();
             Yahoo.RootObject WeatherData = ParseYahooData(WeatherCache);
             UpdateMainWindowWithYahoo(WeatherData);
@@ -166,9 +176,9 @@ namespace Weather
          * Initialize the settings control with ObservableCollection
          * give the initialization value 
          */
-        private void Initialize_SettingPage()
+        private void Initialize_SplitPage()
         {
-            ObservableCollection<string> LanguageList = new ObservableCollection<string>() { "English", "Chinese" };
+            ObservableCollection<string> LanguageList = new ObservableCollection<string>() { "English", "中文", "日本語", "한국어"};
             ObservableCollection<string> UnitsList = new ObservableCollection<string>() { "Metric", "Imperial" };
             //Initialize the settings control
             languageBox.DataContext = LanguageList;
@@ -183,6 +193,14 @@ namespace Weather
             //selected Item will call languageBox_SelectionChanged function to select
             languageBox.SelectedItem = LanguageList[LanguageValue];
             UnitsBox.SelectedItem = UnitsList[UnitsValue];
+            //toggle switch
+            isHideSunToggle.IsOn = isHideSunGraph;
+            isHideSunToggle.Header = BasicData.LANG[14,LanguageValue];
+            //toggle switch
+            isHideUpdateToggle.IsOn = isHideUpdateTime;
+            isHideUpdateToggle.Header = BasicData.LANG[15,LanguageValue];
+
+
         }
         /*
          * Initialize the mainpage without weather data
@@ -191,9 +209,21 @@ namespace Weather
          */
         private void Initialize_MainPage()
         {
-            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
-            updateName.Text = BasicData.LANG[9, LanguageValue];
             TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
+            //map control service token 
+            MapForWeather.MapServiceToken = "zXyw9tFY6elmsJpCHtYY~qkcxn2idzgrLpurme3Au2Q~ArO1fMroeEhh65R5UPd9Dkjxp3K2oPZeyXqdOaFqvtNNiFrJ-RMYAJ9gWaDizuUu";
+            MapForWeather.DesiredPitch = 54;
+            // retrieve map
+            MapForWeather.ZoomLevel = 12;
+            if (isHideSunGraph)
+            {
+                sunGrid.Visibility = Visibility.Collapsed;
+            }
+            if (isHideUpdateTime)
+            {
+                UpdateName.Visibility = Visibility.Collapsed;
+                UpdateTime.Visibility = Visibility.Collapsed;
+            }
         }
         /*
          * parse Yahoo json data
@@ -234,58 +264,42 @@ namespace Weather
         {
             //UTC time offset -> 28800 (China)
             //double UtcOffset = TimeZoneInfo.Local.BaseUtcOffset.TotalSeconds;
-            Tile.TileUpdate();
+            Model.TileModel temp = new Model.TileModel(content.query.results.channel);
+            var channel = content.query.results.channel;
             Yahoo_Data = content;
-            var con = content.query.results.channel;
+            // latitude and longitude
+            LatValue = Convert.ToDouble(channel.item.lat);
+            LongValue = Convert.ToDouble(channel.item.@long);
 
-            CityName.Text = con.location.city;
-            string alpha2 = ISO3166.FromName(con.location.country).Alpha2;
-            CountryCode.Text = "."+alpha2;
-            
-            WindSpeed.Text = BasicData.LANG[6, LanguageValue] + con.wind.speed+ BasicData.WindUnit[UnitsValue];
-            Humidity.Text = BasicData.LANG[7, LanguageValue] + con.atmosphere.humidity + "%";
-            var p = Math.Round(Convert.ToDouble(con.atmosphere.pressure) / 1000.0, 1);
-            Pressure.Text = BasicData.LANG[8, LanguageValue] + p.ToString()+"k"+con.units.pressure;
+            Initialize_SplitPage();
+            startAnimation(channel.astronomy.sunrise, channel.astronomy.sunset);
 
-            WeatherIcon.Text= BasicData.IconDict2[con.item.forecast[0].code];
-            TempMax.Text = con.item.forecast[0].high + BasicData.TempUnit[UnitsValue];
-            TempMin.Text= "/"+con.item.forecast[0].low + BasicData.TempUnit[UnitsValue];
-            //day of week
-            if (LanguageValue != 0)
-                dayofweek.Text = BasicData.DayOfWeek2[con.item.forecast[0].day];
-            else
-                dayofweek.Text = con.item.forecast[0].day;
-            Describe.Text= BasicData.Describe[Convert.ToInt32(con.item.forecast[0].code), LanguageValue];
+            Model = new Model.DataModel(channel);
+        }
+        /*
+         * Initialize the sun graph
+         * start sunrise animation
+         */
+        private void startAnimation(string riseTime, string setTime)
+        {
+            int _rise = Convert.ToInt32(riseTime.Split(':')[0]);
+            int _set = Convert.ToInt32(setTime.Split(':')[0]) + 12;
 
-            var w = (int)((Convert.ToInt32(con.wind.direction) + 22.5) % 360 / 45);
-            //wind icon      
-            WindIcon.Text = BasicData.Wind[2, w];
-            //N or 北风
-            WindDegree.Text = BasicData.Wind[LanguageValue, w];
-
-            var c=con.astronomy.sunrise;
-            var s=con.astronomy.sunset;
-            var wea = con.item.forecast.Skip(1).Take(6).ToList();
-            string[] CustomColor = { "#00f39f", "#ff91cf", "#1ee7e9", "#9a37c3", "#0693fb", "#fba068" };
-            ObservableCollection<Yahoo.Recording> _tempF=new ObservableCollection<Yahoo.Recording>();
-            for (int i = 0; i < 6; i++)
+            //DateTime.UtcNow.Hour -> 2 DateTime.Now.Hour ->  10
+            if (DateTime.Now.Hour < _rise)
             {
-                string _day, _temp, _weather, _describe;
-                //day of week
-                if (LanguageValue != 0)
-                    _day = BasicData.DayOfWeek2[wea[i].day];
-                else
-                    _day = wea[i].day;
-                //day temperature
-                _temp = wea[i].high + BasicData.TempUnit[UnitsValue] + "/ " + wea[i].low + BasicData.TempUnit[UnitsValue];
-                //weather icon
-                _weather = BasicData.IconDict2[wea[i].code];
-                //weather describe
-                _describe = BasicData.Describe[Convert.ToInt32(wea[i].code), LanguageValue];
-
-                _tempF.Add(new Yahoo.Recording() { day = _day, temp = _temp, weather = _weather, describe = _describe,customColor=CustomColor[i] });
+                sunAnimation.To = 0;
             }
-            Forecas = _tempF;
+            else if (DateTime.Now.Hour > _set)
+            {
+                sunAnimation.To = 180;
+            }
+            else
+            {
+                //(DateTime.Now.Hour - _rise) / (_set - _rise) * 180.0 ------>5/13=0  0*180=0
+                sunAnimation.To = (DateTime.Now.Hour - _rise) * 180.0 / (_set - _rise);
+            }
+            sunStoryboard.Begin();
         }
         /*
          * reload window for reloading settings
@@ -294,188 +308,5 @@ namespace Weather
         {
             UpdateMainWindowWithYahoo(Yahoo_Data);
         }
-
-        #region Suggest Box
-        private void SelectCity(CityData.Place city)
-        {
-            if (city != null)
-            {
-                CityName.Text = city.name;
-                CountryCode.Text = city.country.content;
-                City1 = city.woeid;
-                TheInitialization("");
-            }
-        }
-        /*
-         * Do not use global variable anymore [CitysOfCountry]
-         * It will delay and wait the other thread
-         * Pass variable and return sorted list
-         * Display sender source
-         */
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                var useless = CityData.getCityData(sender.Text).Result;
-                if (useless.query.count != 0)
-                {
-                    var matchingContacts = CityDataSource.GetMatching(useless.query.results.place.OrderBy(c => c.name).ToList(), sender.Text);
-                    //to list override
-                    sender.ItemsSource = matchingContacts.ToList();
-                }
-            }
-        }
-
-        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            if (args.ChosenSuggestion != null)
-            {
-                SelectCity(args.ChosenSuggestion as CityData.Place);
-            }
-            else
-            {
-                 NoResults.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            var c = args.SelectedItem as CityData.Place;
-
-            sender.Text = string.Format("{0} {1}", c.name, c.country.content);
-        }
-        #endregion
-
-        #region Control Event
-
-        /*
-         * Ellipse pointer entered animation
-         */
-        private void Ellipse_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            esb1.Begin();
-        }
-        /*
-         * Ellipse pointer exited animation
-         */
-        private void Ellipse_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            esb2.Begin();
-        }
-        /*
-         * language box selection changed event
-         * change the global variable
-         * if no select on the combo box,it will return -1
-         */
-        private void languageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
-            if (languageBox.SelectedIndex > -1)
-            {
-                if (languageBox.SelectedIndex != LanguageValue)
-                {
-                    LanguageValue = languageBox.SelectedIndex;
-                    reloadWindow();
-                }
-                //modify settings
-                localSettings.Values["Language"] = LanguageValue;
-
-            }
-        }
-        /*
-         * Units box selection changed event
-         * change the global variable
-         * if no select on the combo box,it will return -1
-         */
-        private void UnitsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
-            if (UnitsBox.SelectedIndex > -1)
-            {
-                if (UnitsBox.SelectedIndex != UnitsValue)
-                {
-                    UnitsValue = UnitsBox.SelectedIndex;
-                    reloadWindow();
-                }
-                //modify settings
-                localSettings.Values["Unit"] = UnitsValue;
-            }   
-        }
-        /*
-         * resize the grid view
-         */
-        private void weatherV_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var panel = (ItemsWrapGrid)weatherV.ItemsPanelRoot;
-            panel.ItemHeight =bottomPad.ActualHeight-2;
-            panel.ItemWidth = bottomPad.ActualWidth/6.0;
-        }
-
-        #endregion
-
-        /* OMP 
-
-        private OMP.RootObject ParseOMPData(string cache)
-        {
-            if (cache == "")
-            {
-                return OMP.OpenWeatherMapAPI.GetWeatherData(City1, UnitsList[UnitsValue]).Result;
-            }
-            else
-            {
-                //parse json data
-                var serializer = new DataContractJsonSerializer(typeof(OMP.RootObject));
-                var ms = new MemoryStream(Encoding.UTF8.GetBytes(cache));
-                return (OMP.RootObject)serializer.ReadObject(ms);
-            }
-        }
-
-        private void UpdateMainWindowWithOMP(OMP.RootObject content)
-        {
-            OMP_Data = content;
-            searchbox.PlaceholderText = BasicData.LANG[5, LanguageValue];
-            //Get city data and lat lon
-            //CityData.readCityData();
-
-            CityName.Text = content.city.name;
-            RegionInfo CountryEN = new RegionInfo(content.city.country);
-            CountryName.Text = CountryEN.EnglishName;
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
-            TodayDate.Text = DateTime.UtcNow.ToString().Split(' ')[0];
-
-            WindSpeed.Text = BasicData.LANG[6, LanguageValue] + content.list[0].speed + BasicData.WindUnit[UnitsValue];
-            Humidity.Text = BasicData.LANG[7, LanguageValue] + content.list[0].humidity + "%";
-            Pressure.Text = content.list[0].pressure+"hPa";
-
-            var w = (int)((content.list[0].deg + 22.5) % 360 / 45);
-            //wind icon      
-            WindIcon.Text = BasicData.Wind[2, w];
-            //N or 北风
-            WindDegree.Text = BasicData.Wind[LanguageValue, w];
-            //calculate one time ,in for loop add 1
-            var IntDayOfWeek = (int)dtDateTime.AddSeconds(content.list[0].dt).ToLocalTime().DayOfWeek;
-
-            for (int i = 0; i < 6; i++)
-            {
-                string _day, _temp, _weather, _describe;
-                //day of week unix timestamp to day of week
-
-                _day = BasicData.DayOfWeek[LanguageValue, IntDayOfWeek+i];
-                //day temperature
-                _temp = content.list[i].temp.max + BasicData.TempUnit[UnitsValue] + "/ " + content.list[i].temp.min + BasicData.TempUnit[UnitsValue];
-                //weather icon
-                _weather = BasicData.IconDict[content.list[i].weather[0].icon];
-                //weather describe
-                _describe = "";
-
-            }
-        }
-
-        */
-
     }
-
 }

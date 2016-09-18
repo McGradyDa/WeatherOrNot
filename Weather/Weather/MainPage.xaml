@@ -6,31 +6,44 @@
     xmlns:common="using:Windows.UI.Composition"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:Weather.Yahoo"
     xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:data="using:Weather.Model"
     mc:Ignorable="d">
-
+    
+    <Page.Resources>
+        <Storyboard x:Name="sunStoryboard">
+            <DoubleAnimation 
+                x:Name="sunAnimation"
+                Duration="0:0:4"
+                Storyboard.TargetName="sunGraph"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" />
+        </Storyboard>
+    </Page.Resources>
+    
     <Grid Grid.Row="1">
-        <Grid Name="mainGrid">
+        <Grid x:Name="MainGrid" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6.2*"/>
                 <ColumnDefinition Width="12*"/>
             </Grid.ColumnDefinitions>
-
+            <!--Split View public for title bar click-->
             <SplitView Grid.Column="0" 
                        x:Name="SettingSplitView" 
                        x:FieldModifier="public"
                        DisplayMode="Overlay">
                 <SplitView.Pane>
-                    <StackPanel BorderBrush="Gray" BorderThickness="0,0,0.9,0">
-                        <StackPanel.Background>
-                            <SolidColorBrush Color="#f5f9fe"/>
-                        </StackPanel.Background>
-
+                    <Grid BorderBrush="Gray" BorderThickness="0,0,0.9,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="3.5*"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="splitImage" Grid.RowSpan="2" Source="Assets/Background/bg0.jpg" Stretch="UniformToFill"></Image>
+                        <Grid x:Name="splitBlur" Grid.RowSpan="2" SizeChanged="OnGridSizeChanged"/>
                         <Ellipse x:Name="e1" RenderTransformOrigin="0.5,0.5" 
+                                 Grid.Row="0"
                                  Height="100" Width="100" 
                                  Margin="0,20,0,20" 
-                                 HorizontalAlignment="Center"
+                                 HorizontalAlignment="Center"                                 
                                  PointerEntered="Ellipse_PointerEntered"
                                  PointerExited="Ellipse_PointerExited">
                             <Ellipse.Fill>
@@ -50,7 +63,7 @@
                                 </Storyboard>
                             </Ellipse.Resources>
                         </Ellipse>
-                        <Pivot x:Name="rootPivot">
+                        <Pivot x:Name="Pivot" Grid.Row="1">
                             <PivotItem x:Name="pivotSetting" FontStretch="SemiCondensed">
                                 <StackPanel>
                                     <ComboBox x:Name="languageBox"
@@ -61,6 +74,8 @@
                                               Margin="0,10,0,0" Width="150"
                                               ItemsSource="{Binding}"
                                               SelectionChanged="UnitsBox_SelectionChanged"/>
+                                    <ToggleSwitch x:Name="isHideUpdateToggle" Toggled="isHideUpdateToggle_Toggled"/>
+                                    <ToggleSwitch x:Name="isHideSunToggle" Toggled="isHideSunToggle_Toggled"/>
                                 </StackPanel>
                             </PivotItem>
                             <PivotItem x:Name="pivotContact" Foreground="White">
@@ -74,73 +89,113 @@
                                 </StackPanel>
                             </PivotItem>
                         </Pivot>
-                    </StackPanel>
+                    </Grid>
                 </SplitView.Pane>
                 <Grid Name="LeftPad">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="8.5*"/>
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Margin="0,30,0,0">
-                        <StackPanel Orientation="Horizontal">
+                    <Grid Grid.Row="0" Margin="0,30,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                             <TextBlock x:Name="CityName" 
+                                       Text="{x:Bind Model.maindata.cityname,Mode=OneWay}"
                                        CharacterSpacing="60"  
-                                       FontSize="48"
+                                       FontSize="40"
                                        FontWeight="Thin"
                                        Foreground="White" 
                                        VerticalAlignment="Bottom"/>
                             <TextBlock x:Name="CountryCode"
+                                       Text="{x:Bind Model.maindata.countrycode,Mode=OneWay}"
                                        CharacterSpacing="60" 
-                                       FontSize="48"
+                                       FontSize="40"
                                        FontWeight="Thin"
                                        Foreground="Cyan"
                                        VerticalAlignment="Bottom"/>
                         </StackPanel>
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Orientation="Vertical">
-                        <Grid CornerRadius="10" BorderBrush="Transparent" BorderThickness="1,0,0,0" Margin="2,0,5,0">
+                        <StackPanel Orientation="Horizontal" 
+                                    Margin="60,0,0,10"
+                                    Opacity="0.7"
+                                    VerticalAlignment="Bottom" 
+                                    HorizontalAlignment="Left">
+                            <TextBlock x:Name="UpdateName"
+                                       Text="{x:Bind Model.maindata.updatename,Mode=OneWay}"
+                                       Foreground="White" 
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,10,0"
+                                       FontSize="14"/>
+                            <TextBlock x:Name="UpdateTime" FontSize="14"
+                                       Text="{x:Bind Model.maindata.updatetime,Mode=OneWay}"
+                                       VerticalAlignment="Bottom" 
+                                       Foreground="White"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid x:Name="LeftBottomBlur" Grid.Row="1" SizeChanged="OnGridSizeChanged"/>
+                    <StackPanel x:Name="LeftBottom" Grid.Row="1" Orientation="Vertical" Margin="0,0,4,0">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.8*"/>
                                 <RowDefinition Height="2.6*"/>
                             </Grid.RowDefinitions>
-                            <Grid.Background>
-                                <SolidColorBrush Color="White" Opacity="0.5"/>
-                            </Grid.Background>
-                            <StackPanel Grid.Row="0" Margin="0,10,0,10" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="&#xF050;" Margin="10,0,0,0" FontSize="14" 
-                                       Foreground="Cyan" 
-                                       FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
-                                <TextBlock Name="WindSpeed" Margin="5,0,0,0" Foreground="White" FontSize="14"/>
-                                <TextBlock Text="&#xF07A;" Margin="10,0,0,0" FontSize="14" 
-                                       Foreground="Cyan"
-                                       FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
-                                <TextBlock Name="Humidity" Margin="5,0,0,0" Foreground="White" FontSize="14"/>
-                                <TextBlock Text="&#xF079;" Margin="10,0,0,0" FontSize="14" 
-                                       Foreground="Cyan" 
-                                       FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
-                                <TextBlock Name="Pressure" Margin="5,0,0,0" Foreground="White" FontSize="14"/>
-                            </StackPanel>
+                            <Grid Grid.Row="0" Margin="0,10,0,10" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.7*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <TextBlock Text="&#xF050;" 
+                                               FontSize="14" 
+                                               Margin="10,0,10,0"
+                                               Foreground="Cyan" 
+                                               FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
+                                    <TextBlock x:Name="WindSpeed"
+                                               Text="{x:Bind Model.maindata.windspeed,Mode=OneWay}"
+                                               Foreground="White"
+                                               FontSize="14"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Text="&#xF07A;" 
+                                               FontSize="14"
+                                               Margin="10,0,10,0"
+                                               Foreground="Cyan"
+                                               FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
+                                    <TextBlock x:Name="Humidity" 
+                                               Text="{x:Bind Model.maindata.humidity,Mode=OneWay}"
+                                               Foreground="White"
+                                               FontSize="14"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                    <TextBlock Text="&#xF079;" 
+                                               FontSize="14" 
+                                               Margin="10,0,10,0"
+                                               Foreground="Cyan" 
+                                               FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
+                                    <TextBlock x:Name="Pressure" 
+                                               Text="{x:Bind Model.maindata.pressure,Mode=OneWay}"
+                                               Foreground="White" 
+                                               FontSize="14"/>
+                                </StackPanel>
+                            </Grid>
                             <Grid Grid.Row="1" >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.8*" />
+                                    <ColumnDefinition Width="1.6*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="10,0,10,0">
-                                    <TextBlock Name ="WeatherIcon" FontSize="55" 
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Top"
-                                           FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons" />
-                                    <TextBlock Name="Describe" FontSize="18"
+                                    <TextBlock x:Name ="WeatherIcon" 
+                                               Text="{x:Bind Model.maindata.weathericon,Mode=OneWay}"
+                                               FontSize="55" 
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Top"
+                                               FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"
+                                               IsColorFontEnabled="True"/>
+                                    <TextBlock x:Name="Describe" 
+                                               Text="{x:Bind Model.maindata.describe,Mode=OneWay}"
+                                               FontSize="18"
                                                Foreground="White"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Bottom"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                        <TextBlock Name="updateName"
-                                               Foreground="White" 
-                                               VerticalAlignment="Bottom"
-                                               FontSize="12"/>
-                                        <TextBlock Name="updateTime" VerticalAlignment="Bottom" Foreground="White" FontSize="12"/>
-                                    </StackPanel>
                                 </StackPanel>
                                 <Grid Grid.Column="1">
                                     <Grid.RowDefinitions>
@@ -150,19 +205,27 @@
                                     <StackPanel Grid.Row="0" Orientation="Horizontal"
                                                 VerticalAlignment="Bottom" 
                                                 HorizontalAlignment="Right">
-                                        <TextBlock Name="TempMax" FontSize="30" 
+                                        <TextBlock x:Name="TempMax" FontSize="30" 
+                                                   Text="{x:Bind Model.maindata.tempmax,Mode=OneWay}"
                                                    VerticalAlignment="Center"
                                                    CharacterSpacing="60"
                                                    Foreground="Red"/>
-                                        <TextBlock Name="TempMin" FontSize="30"
+                                        <TextBlock x:Name="TempMin" FontSize="30"
+                                                   Text="{x:Bind Model.maindata.tempmin,Mode=OneWay}"
                                                    VerticalAlignment="Center" 
-                                                   Margin="0,0,10,0"
+                                                   Margin="0,0,20,0"
                                                    CharacterSpacing="60"
                                                    Foreground="Cyan"/>
                                     </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <TextBlock Name="dayofweek" HorizontalAlignment="Center" Foreground="Salmon" FontSize="24"/>
-                                        <TextBlock Name="TodayDate" HorizontalAlignment="Right" Foreground="White" FontSize="24"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                        <TextBlock x:Name="Dayofweek" 
+                                                   Text="{x:Bind Model.maindata.dayofweek,Mode=OneWay}"
+                                                   Foreground="Salmon" 
+                                                   FontSize="18"/>
+                                        <TextBlock x:Name="TodayDate"
+                                                   Margin="10,0,20,0" 
+                                                   Foreground="White" 
+                                                   FontSize="18"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -173,7 +236,12 @@
 
             <SplitView Grid.Column="1" x:Name="MapSplitView" x:FieldModifier="public" PanePlacement="Right">
                 <SplitView.Pane>
-                    <maps:MapControl x:Name="MapForWeather"/>
+                    <maps:MapControl Grid.Row="1"
+                                     x:Name="MapForWeather" 
+                                     x:FieldModifier="public"
+                                     RotateInteractionMode="GestureAndControl"
+                                     ZoomInteractionMode="GestureAndControl"
+                                     TiltInteractionMode="GestureAndControl"/>
                 </SplitView.Pane>
                 <Grid Name="RightPad">
                     <Grid.RowDefinitions>
@@ -188,65 +256,109 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top">
                             <AutoSuggestBox x:Name="searchbox" QueryIcon="Find" Width="200" Margin="0,50,10,0"
-                                        UpdateTextOnSelect="True"
-                                        TextChanged="AutoSuggestBox_TextChanged"
-                                        QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                                        SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                                        IsTabStop="True"
-                                        HorizontalAlignment="Right"/>
+                                            PlaceholderText="{x:Bind Model.maindata.placeholdertext,Mode=OneWay}"
+                                            UpdateTextOnSelect="True"
+                                            TextChanged="AutoSuggestBox_TextChanged"
+                                            QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                                            AutoMaximizeSuggestionArea="True"
+                                            IsTabStop="True"
+                                            PointerEntered="searchbox_PointerEntered"
+                                            PointerExited="searchbox_PointerExited"
+                                            HorizontalAlignment="Right"/>
                             <RelativePanel x:Name="CityDetails" Grid.Row="1" HorizontalAlignment="Left" Visibility="Collapsed">
                                 <TextBlock x:Name="NoResults" Text="No results found" Grid.Row="2" Visibility="Collapsed" />
                             </RelativePanel>
                             <StackPanel HorizontalAlignment="Right" Margin="0,20,20,0">
-                                <TextBlock x:Name="WindIcon" HorizontalAlignment="Center" FontWeight="Light" FontSize="40" Foreground="White" FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons" />
-                                <TextBlock x:Name="WindDegree" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
+                                <TextBlock x:Name="WindIcon"
+                                           Text="{x:Bind Model.maindata.windicon,Mode=OneWay}"
+                                           HorizontalAlignment="Center" 
+                                           FontWeight="Light" 
+                                           FontSize="40" 
+                                           Foreground="White" 
+                                           FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons" />
+                                <TextBlock x:Name="WindDegree" 
+                                           Text="{x:Bind Model.maindata.winddegree,Mode=OneWay}"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Top" 
+                                           FontSize="15"
+                                           Foreground="White"/>
                             </StackPanel>
                         </StackPanel>
+
+                        <Grid Grid.Row="1" x:Name="sunGrid"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Right"
+                              Margin="0,0,90,0" 
+                              Opacity="0.6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <!-- StrokeDashArray dash gaps -->
+                            <Path Grid.Row="0" x:Name="progressPath" Stroke="Gold" StrokeDashArray="3" StrokeThickness="1.5" Margin="55,0,0,0"/>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <TextBlock x:Name="sunrise" 
+                                           Text="{x:Bind Model.maindata.sunrise,Mode=OneWay}"
+                                           Foreground="White" 
+                                           Margin="55,0,90,0"/>
+                                <TextBlock x:Name="sunset" 
+                                           Text="{x:Bind Model.maindata.sunset,Mode=OneWay}"
+                                           Foreground="White" 
+                                           HorizontalAlignment="Right" 
+                                           Margin="0,0,15,0"/>
+                            </StackPanel>
+                            <Grid Grid.Row="1" x:Name="sunGraph" Width="235" Margin="40,0,0,0"
+                                  RenderTransformOrigin=".5,.5">
+                                <Grid.RenderTransform>
+                                    <RotateTransform/>
+                                </Grid.RenderTransform>
+                                <TextBlock Text="&#xF00D;"
+                                           FontSize="20"
+                                           IsColorFontEnabled="True"
+                                           FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons"/>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid Grid.Row="1" Name="bottomPad">
+                    <Grid Grid.Row="1" x:Name="bottomPad">
                         <Grid.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
                             </TransitionCollection>
                         </Grid.Transitions>
+                        <!-- rightBottomBlur blur the background image-->
+                        <Grid x:Name="rightBottomBlur" SizeChanged="OnGridSizeChanged"/>
                         <!--x:Bind Forecas-->
-                        <GridView x:Name="weatherV" ItemsSource="{x:Bind Forecas, Mode=OneWay}"
+                        <GridView x:Name="rightBottom" ItemsSource="{x:Bind Model.bottomdata, Mode=OneWay}"
                               ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                              SizeChanged="weatherV_SizeChanged">
+                              SizeChanged="rightBottom_SizeChanged">
                             <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="data:Recording">
-                                    <Border Name="weatherB" CornerRadius="10" Width="110">
-
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" Opacity="0.5">
-                                                <GradientStop Color="{Binding customColor}" Offset="0"/>
-                                                <GradientStop Color="Transparent" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <StackPanel>
-                                            <TextBlock Name="dayofweek" Text="{x:Bind day}" 
-                                                   Margin="0,10,0,10"
+                                <DataTemplate x:DataType="data:BottomData">
+                                    <StackPanel>
+                                        <TextBlock x:Name="Dayofweek" Text="{x:Bind day}" 
+                                                   Margin="0,6,0,10"
                                                    FontSize="21" 
                                                    FontWeight="Thin"
                                                    Foreground="White"
-                                                   HorizontalAlignment="Center" />
-                                            <TextBlock Name ="WeatherIcon" Text="{x:Bind weather}" 
+                                                   HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name ="WeatherIcon" Text="{x:Bind weather}" 
                                                    FontSize="35"
                                                    FontFamily="ms-appx:///Assets/Fonts/weather.ttf#Weather Icons" 
-                                                   HorizontalAlignment="Center" />
-                                            <TextBlock Name ="WeatherDes" Text="{x:Bind describe}" 
-                                                   Margin="0,10,0,10"
+                                                   IsColorFontEnabled="True"
+                                                   HorizontalAlignment="Center">
+
+                                        </TextBlock>
+                                        <TextBlock x:Name ="WeatherDes" Text="{x:Bind describe}" 
+                                                   Margin="0,8,0,10"
                                                    FontSize="15"
                                                    Foreground="White"
                                                    HorizontalAlignment="Center" />
-                                            <TextBlock Name="TempDay" Text="{x:Bind temp}"
+                                        <TextBlock x:Name="TempDay" Text="{x:Bind temp}"
                                                    Margin="0,0,0,8"
                                                    FontSize="17"
                                                    FontWeight="Thin"
                                                    Foreground="White"
                                                    HorizontalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
+                                    </StackPanel>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>

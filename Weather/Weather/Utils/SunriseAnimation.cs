@@ -1,10 +1,11 @@
 ﻿using System;
 using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace Weather
 {
-    public sealed partial class MainPage
+    public sealed partial class MainPage : Page
     {
         private void sunAnimatePath()
         {

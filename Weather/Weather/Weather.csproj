@@ -91,7 +91,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\avatar.jpg" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
-    <Content Include="Assets\bg0.jpg" />
+    <Content Include="Assets\Background\bg0.jpg" />
     <Content Include="Assets\Fonts\weather.ttf" />
     <Content Include="Assets\ICON\0.png" />
     <Content Include="Assets\ICON\1.png" />
@@ -148,8 +148,8 @@
     <Content Include="Assets\Square310x310Logo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\sun1.jpg" />
-    <Content Include="Assets\sun3.jpg" />
+    <Content Include="Assets\Background\sun1.jpg" />
+    <Content Include="Assets\Background\sun3.jpg" />
     <Content Include="Assets\Weather\Clouds0.jpg" />
     <Content Include="Assets\Weather\Rain0.jpg" />
     <None Include="project.json" />
@@ -158,13 +158,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CityData.cs" />
-    <Compile Include="CityDataSource.cs" />
-    <Compile Include="ControlEvent.cs" />
-    <Compile Include="GaussianBlur.cs" />
-    <Compile Include="SuggestBox.cs" />
-    <Compile Include="Sunrise.cs" />
-    <Compile Include="UpdateMainWindow.cs" />
+    <Compile Include="Control\GetCityData.cs" />
+    <Compile Include="Control\MatchCityData.cs" />
+    <Compile Include="Control\MainPageEvents.cs" />
+    <Compile Include="Control\TitleBarEvents.cs" />
+    <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Utils\GaussianBlur.cs" />
+    <Compile Include="Control\SuggestBoxEvents.cs" />
+    <Compile Include="Utils\SunriseAnimation.cs" />
     <Compile Include="Utils\BasicData.cs" />
     <Compile Include="CustomTitle.xaml.cs">
       <DependentUpon>CustomTitle.xaml</DependentUpon>
@@ -174,9 +175,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OMP\OpenWeatherMapAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="Model\TileModel.cs" />
     <Compile Include="Yahoo\YahooWeatherAPI.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,12 +185,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Season\autumn.jpg" />
-    <Content Include="Assets\Season\spring.jpg" />
-    <Content Include="Assets\Season\summer.jpg" />
-    <Content Include="Assets\Season\winter.jpg" />
-    <Content Include="Assets\sun0.jpg" />
-    <Content Include="Assets\sun2.jpg" />
+    <Content Include="Assets\Background\sun0.jpg" />
+    <Content Include="Assets\Background\sun2.jpg" />
     <Content Include="Assets\Tile\Clouds0.jpg" />
     <Content Include="Assets\Tile\day0.jpg" />
     <Content Include="Assets\Tile\morning0.jpg" />
