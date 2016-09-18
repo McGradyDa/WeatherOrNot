@@ -13,12 +13,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Image x:Name="bgName" Grid.RowSpan="2" Stretch="UniformToFill" Opacity="0.95"></Image>
-        <Grid x:Name="TitleBar" Grid.Row="0" VerticalAlignment="Top" Height="32" Canvas.ZIndex="3">
+        <Grid x:Name="TitleBar" Grid.Row="0" VerticalAlignment="Top" Height="32">
             <!--33000000 button background color make them same bg color-->
             <Rectangle x:Name="BackgroundElement" Fill="#33000000" />
             <Grid Padding="0,0,200,0" IsTapEnabled="False">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -30,21 +29,14 @@
                         FontFamily="Segoe MDL2 Assets" 
                         Click="Option_Click">
                 </Button>
-                <Button Grid.Column="1" Name="FreshButton" 
-                        Content="&#xE72C;"
-                        Foreground="White" 
-                        FontSize="20" 
-                        FontFamily="Segoe MDL2 Assets"
-                        Click="FreshButton_Click">
-                </Button>
-                <Button Grid.Column="2" Name="Mapbutton" 
+                <Button Grid.Column="1" Name="Mapbutton" 
                         Content="&#xE128;"
                         Foreground="White" 
                         FontSize="20" 
                         FontFamily="Segoe MDL2 Assets"
                         Click="Mapbutton_Click">
                 </Button>
-                <Button Grid.Column="3" Name="SwitchBg"
+                <Button Grid.Column="2" Name="SwitchBg"
                         Content="&#xE13C;"
                         Foreground="White"
                         FontSize="20"

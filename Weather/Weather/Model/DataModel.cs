@@ -7,6 +7,40 @@ using Windows.UI.Xaml;
 
 namespace Weather.Model
 {
+    #region CLASS
+
+    public class MainData
+    {
+        public string cityname { get; set; }
+        public string countrycode { get; set; }
+        public string updatename { get; set; }
+        public string updatetime { get; set; }
+        public string windspeed { get; set; }
+        public string humidity { get; set; }
+        public string pressure { get; set; }
+        public string weathericon { get; set; }
+        public string describe { get; set; }
+        public string tempmax { get; set; }
+        public string tempmin { get; set; }
+        public string dayofweek { get; set; }
+        public string todaydate { get; set; }
+        public string windicon { get; set; }
+        public string winddegree { get; set; }
+        public string sunrise { get; set; }
+        public string sunset { get; set; }
+        public string placeholdertext { get; set; }
+    }
+
+    public class BottomData
+    {
+        public string day { get; set; }
+        public string temp { get; set; }
+        public string weather { get; set; }
+        public string describe { get; set; }
+    }
+
+    #endregion
+
     public class DataModel : DependencyObject, INotifyPropertyChanged
     {
         #region INPC
@@ -66,6 +100,7 @@ namespace Weather.Model
                 countrycode = "." + alpha2,
                 updatename = BasicData.LANG[9, MainPage.LanguageValue],
                 //updatetime
+                updatetime = con.lastBuildDate,
                 windspeed = BasicData.LANG[6, MainPage.LanguageValue] + (int)Convert.ToDouble(con.wind.speed) + BasicData.WindUnit[MainPage.UnitsValue],
                 humidity = BasicData.LANG[7, MainPage.LanguageValue] + con.atmosphere.humidity + "%",
                 pressure = BasicData.LANG[8, MainPage.LanguageValue] + p.ToString() + "k" + con.units.pressure,

@@ -4,16 +4,16 @@ using Windows.UI.Notifications;
 using System.Collections.Generic;
 using NotificationsExtensions;
 
-namespace Weather
+namespace Weather.Model
 {
-    public class Tile
+    public class TileModel
     {
         private List<string> rain = new List<string> { "3", "4", "8", "9", "10", "11", "12", "35", "37", "38", "39", "40", "45", "47" };
         private List<string> snow = new List<string> { "5", "6", "7", "13", "14", "15", "16", "18", "41", "42", "43", "46" };
         private List<string> cloud = new List<string> { "20", "22", "26", "27", "28", "29", "30" };
         //private List<string> fair = new List<string> { "31", "32", "33", "34" };
 
-        public Tile(Yahoo.Channel channel)
+        public TileModel(Yahoo.Channel channel)
         {
             UpdateMedium(channel);
         }
