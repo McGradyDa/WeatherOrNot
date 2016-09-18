@@ -32,7 +32,7 @@ namespace Weather
          */
         private void OnLoaded(object sender, RoutedEventArgs args)
         {
-            Grid[] _list = { rightBottomBlur, leftBottomBlur, splitBlur };
+            Grid[] _list = { rightBottomBlur, LeftBottomBlur, splitBlur };
             for (int i = 0; i < _list.Length; i++)
             {
                 BlurList.listOfGrid[i] = _list[i];
@@ -73,8 +73,8 @@ namespace Weather
 
         public class BlurList
         {
-            public static Grid[] listOfGrid { get; set; } = new Grid[3];
-            public static SpriteVisual[] listOftVisual { get; set; } = new SpriteVisual[3];
+            public static Grid[] listOfGrid = new Grid[3];
+            public static SpriteVisual[] listOftVisual = new SpriteVisual[3];
         }
     }
 }

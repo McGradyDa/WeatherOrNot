@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Weather
 {
-    public class CityData
+    public class GetCityData
     {
         public async static Task<string> getCityData(string inputString)
         {
@@ -53,21 +53,6 @@ namespace Weather
             }).ConfigureAwait(continueOnCapturedContext: false);
         }
         #endregion
-        /*
-        public Tuple<double, double> getCoordinatesFromCity(string cityName)
-        {
-            City temp = CitysOfCountry.city.Find(x => x.name.Contains(cityName));
-
-            return Tuple.Create(temp.coord.lon, temp.coord.lat);
-        }
-
-        public int getIdFromCity(string cityName)
-        {
-            City temp = CitysOfCountry.city.Find(x => x.name.Contains(cityName));
-
-            return temp._id;
-        }
-        */
 
         #region city data
         [DataContract]
@@ -317,6 +302,21 @@ namespace Weather
         }
         #endregion
 
+        /*
+        public Tuple<double, double> getCoordinatesFromCity(string cityName)
+        {
+            City temp = CitysOfCountry.city.Find(x => x.name.Contains(cityName));
+
+            return Tuple.Create(temp.coord.lon, temp.coord.lat);
+        }
+
+        public int getIdFromCity(string cityName)
+        {
+            City temp = CitysOfCountry.city.Find(x => x.name.Contains(cityName));
+
+            return temp._id;
+        }
+        */
 
     }
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Weather
 {
-    public static class CityDataSource
+    public static class MatchCityData
     {
         /*
         private static List<CityData.Place> CitySource = CityData.CitysOfCountry.query.results.place.OrderBy(c => c.name).ToList();
@@ -14,7 +14,7 @@ namespace Weather
         }
         */
 
-        public static IEnumerable<CityData.Place> GetMatching(List<CityData.Place> Citys, string query)
+        public static IEnumerable<GetCityData.Place> GetMatching(List<GetCityData.Place> Citys, string query)
         {
             if (Citys.Count < 5)
             {

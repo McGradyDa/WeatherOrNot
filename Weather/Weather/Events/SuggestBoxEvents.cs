@@ -6,7 +6,8 @@ namespace Weather
     public sealed partial class MainPage:Page
     {
         #region Suggest Box
-        private void SelectCity(CityData.Place city)
+
+        private void SelectCity(GetCityData.Place city)
         {
             if (city != null)
             {
@@ -26,23 +27,23 @@ namespace Weather
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && !string.IsNullOrWhiteSpace(sender.Text))
             {
-                var useless = CityData.getCityData(sender.Text).Result;
+                var useless = GetCityData.getCityData(sender.Text).Result;
                 // RootObject mostly and then RootObject2
-                var dataContract = CityData.parseJson<CityData.RootObject>(useless);
+                var dataContract = GetCityData.parseJson<GetCityData.RootObject>(useless);
                 if (dataContract.query.count != 0)
                 {
                     if (dataContract.query.count != 1)
                     {
-                        var matchingContacts = CityDataSource.GetMatching(dataContract.query.results.place.OrderBy(c => c.name).ToList(), sender.Text);
+                        var matchingContacts = MatchCityData.GetMatching(dataContract.query.results.place.OrderBy(c => c.name).ToList(), sender.Text);
                         //to list override
                         sender.ItemsSource = matchingContacts.ToList();
                     }
                     else
                     {
-                        var dataContract2 = CityData.parseJson<CityData.RootObject2>(useless);
+                        var dataContract2 = GetCityData.parseJson<GetCityData.RootObject2>(useless);
                         if (dataContract.query.count != 0)
                         {
-                            System.Collections.Generic.List<CityData.Place> c = new System.Collections.Generic.List<CityData.Place>();
+                            System.Collections.Generic.List<GetCityData.Place> c = new System.Collections.Generic.List<GetCityData.Place>();
                             c.Add(dataContract2.query.results.place);
                             sender.ItemsSource = c;
                         }
@@ -57,7 +58,7 @@ namespace Weather
         {
             if (args.ChosenSuggestion != null)
             {
-                SelectCity(args.ChosenSuggestion as CityData.Place);
+                SelectCity(args.ChosenSuggestion as GetCityData.Place);
             }
             else
             {
@@ -69,10 +70,11 @@ namespace Weather
          */
         private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            var c = args.SelectedItem as CityData.Place;
+            var c = args.SelectedItem as GetCityData.Place;
 
             sender.Text = string.Format("{0} {1}", c.name, c.country.content);
         }
+
         #endregion
     }
 }

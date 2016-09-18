@@ -18,7 +18,6 @@ namespace Weather
             UpdateMedium(channel);
         }
 
-
         private string chooseBackground(string code)
         {
             string img, baseFolder = "Assets/Tile/";

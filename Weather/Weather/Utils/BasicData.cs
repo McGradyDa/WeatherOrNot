@@ -40,6 +40,11 @@ namespace Weather
             { "Sun","周日" ,"日曜日","일요일","Domingo"},
         };
 
+
+
+
+
+
         public static string[,] LANG =
         {
             { "Settings","设置" ,"設定" ,"설정" ,"Configuración" },
@@ -58,7 +63,14 @@ namespace Weather
             { "Longitude","经度","経度" ,"경도" ,"Longitud" },
             { "Hide sun graph","隐藏日出时间","隠す日の出時間","숨기기 일출 시간",""},
             { "Hide update time","隐藏更新时间","非表示の更新","숨기기 업데이트",""},
+            { "Sun rise","日出","日の出","해돋이","",},
+            { "Sun set","日落","日の入り","일몰","",},
         };
+
+        
+
+
+
 
         public static string[,] Describe =
         {
