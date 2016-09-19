@@ -35,11 +35,11 @@ namespace Weather.Model
             }
             else
             {
-                if (DateTime.Now.Hour > 6 && DateTime.Now.Hour < 8)
+                if (DateTime.Now.Hour >= 5 && DateTime.Now.Hour < 9)
                     img = "morning0.jpg";
-                else if (DateTime.Now.Hour > 6 && DateTime.Now.Hour < 15)
+                else if (DateTime.Now.Hour >= 9 && DateTime.Now.Hour < 15)
                     img = "day0.jpg";
-                else if (DateTime.Now.Hour > 15 && DateTime.Now.Hour < 18)
+                else if (DateTime.Now.Hour >= 15 && DateTime.Now.Hour < 19)
                     img = "sunset0.jpg";
                 else
                     img = "night0.jpg";
